@@ -1007,7 +1007,7 @@ export class Builder {
   }
 
   // A ladder up a wall whose face is at (x, z) facing `face`, from y0, h high: run into it to climb, up onto the top.
-  ladder(x, z, y0, h, face = '-z', { width = 0.5, mat = 'rail_dark' } = {}) {
+  ladder(x, z, y0, h, face = '-z', { width = 0.5, mat = 'ladder' } = {}) {
     const n = FACE[face], t = [n[1], -n[0]];
     const px = x + n[0] * 0.06, pz = z + n[1] * 0.06;
     this.w.col.addLadder([px, y0, pz], [px, y0 + h, pz], [-n[0], 0, -n[1]], width);

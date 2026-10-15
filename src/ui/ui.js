@@ -61,6 +61,7 @@ const CONTROLS = [
 	[ 'Back to last checkpoint', 'Q', 'D-pad ↑' ],
 	[ 'Restart', 'R', 'Select' ],
 	[ 'First person', 'V', 'D-pad →' ],
+	[ 'Runner Vision', 'B', '—' ],
 	[ 'Slow motion', 'R mouse', 'RB' ],
 	[ 'Pause', 'Esc', 'Start' ],
 ];
@@ -429,6 +430,7 @@ export class UI {
 			audio: slider( 'volume', 'Volume', 'Footsteps, landings, the wind and the game\'s sounds.', 0, 1, 0.05, shows.volume ),
 			game: toggle( 'hints', 'Course hints', 'The tips that show where each move is first needed.' ) +
 				toggle( 'ghost', 'Ghost', 'Your best run on the course, running beside you.' ) +
+				toggle( 'vision', 'Runner Vision', 'The world white and what you can use red, so the line reads at a glance. B in a run.' ) +
 				`<div class="row-set"><span class="label">Reset progress<span class="help">Forget every best time, medal and star. Settings and your runner stay.</span></span><button class="btn danger small" data-nav data-reset><span>Reset</span></button></div>` +
 				`<div class="row-set"><span class="label">Default settings<span class="help">Every setting back to how it started.</span></span><button class="btn small" data-nav data-defaults><span>Restore</span></button></div>`,
 		};

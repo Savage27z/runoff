@@ -16,6 +16,7 @@ import { Style } from './style.js';
 import { GhostPlayer, GhostRecorder, clearGhosts, loadGhost, saveGhost } from './ghost.js';
 import { Save } from './save.js';
 import { Sound } from '../audio/sound.js';
+import { updateVision } from '../world/vision.js';
 
 // A frame counts as at most this long (s): after a stall everything goes on from where it was.
 const LONGEST_FRAME = 1 / 20;
@@ -92,6 +93,12 @@ export class Game {
 		this.elapsed = 0;
 
 		for ( const type of [ 'pointerdown', 'keydown' ] ) addEventListener( type, () => this.sound.unlock(), { capture: true } );
+		// B in a run: Runner Vision on or off.
+		addEventListener( 'keydown', ( event ) => {
+
+			if ( event.code === 'KeyB' && ! event.repeat && this.mode === 'play' ) this.setSetting( 'vision', ! this.save.data.settings.vision );
+
+		} );
 
 	}
 
@@ -442,6 +449,7 @@ export class Game {
 
 		}
 
+		updateVision( this.save.data.settings.vision, rawDt );
 		this.course.world.update( this.elapsed, dt );
 		this.env.update( this.elapsed );
 		this.env.center( session.sim.position.x, session.sim.position.z );

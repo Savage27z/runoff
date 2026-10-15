@@ -19,6 +19,8 @@ export const DEFAULT_SETTINGS = Object.freeze( {
 	hints: true,
 	// Your best run on a course, run beside you as a ghost.
 	ghost: true,
+	// Runner Vision: the world white, what the runner can use red (B toggles it in a run).
+	vision: false,
 	showFps: false,
 } );
 

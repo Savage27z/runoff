@@ -2,6 +2,7 @@
 // goes to the SolidCollector in the order it was laid down (toWorld.js hands it to the runner).
 import * as THREE from 'three';
 import { SolidCollector } from './solids.js';
+import { setupVision } from './vision.js';
 import * as TX from './textures.js';
 
 const FACES = [
@@ -132,6 +133,8 @@ function buildMaterials(theme) {
     grass: { mat: std({ map: TX.grass(), roughness: 1 }), tile: [3, 3], surface: 'gravel' },
     conc: { mat: std({ map: TX.concBoard(), roughness: 0.92 }), tile: [4, 4], surface: 'concrete' },
     rail_dark: { mat: std({ color: '#2a2d33', roughness: 0.45, metalness: 0.6 }), tile: [4, 4], surface: 'metal' },
+    // Ladders look like the dark rails, but are their own so Runner Vision can tell them apart.
+    ladder: { mat: std({ color: '#2a2d33', roughness: 0.45, metalness: 0.6 }), tile: [4, 4], surface: 'metal' },
     vine: { mat: std({ color: '#3d7a34', roughness: 0.85 }), tile: [4, 4], surface: 'wood' },
     vine2: { mat: std({ color: '#5a9a3e', roughness: 0.85 }), tile: [4, 4], surface: 'wood' },
     fence: { mat: std({ map: TX.fenceMesh(), transparent: false, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.5, metalness: 0.5 }), tile: [1.2, 1.2], surface: 'metal' },
@@ -200,6 +203,7 @@ export class World {
   setTheme(theme) {
     this.theme = theme;
     this.mats = buildMaterials(theme);
+    if (!this.headless) setupVision(this.mats);
   }
 
   bucket(key) {
