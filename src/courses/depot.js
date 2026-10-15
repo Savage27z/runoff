@@ -28,7 +28,7 @@ export const DEPOT = {
 	theme: 'hall',
 	unlock: 11,
 	rebuilt: true,
-	medals: [ 45.5, 39, 35, 32 ],
+	medals: [ 46, 39.5, 35.5, 32 ],
 	spawn: { x: 0, y: 0, z: - 8, yaw: 0 },
 	killY: - 8,
 	// The foam: a fall.
@@ -94,6 +94,21 @@ export const DEPOT = {
 			[ 13, 36, 16, 42, 2.4, 'w', true ], [ - 16, 46, - 12, 52, 1.8, '', true ], [ 12, 52, 18, 55, 1.0, 'n', false ],
 		] ) b.plyBox( x0, z0, x1, z1, 0, h, r, c );
 		b.pipeRail( - 18, 20, - 12, 20, 0, 1.1 ); b.pipeRail( 12, 26, 18, 26, 0, 1.1 );
+		// The lanes beside the middle: rails to vault and bars to slide under, by turns.
+		for ( const [ sd, z, slide ] of [ [ 1, 10, false ], [ 1, 28, true ], [ 1, 40, false ], [ - 1, 12, true ], [ - 1, 30, false ], [ - 1, 44, true ] ] ) {
+
+			const x0 = sd > 0 ? 3.9 : - 6.5, x1 = sd > 0 ? 6.5 : - 3.9;
+			if ( ! slide ) {
+
+				b.pipeRail( x0, z, x1, z, 0, 1.0 );
+				continue;
+
+			}
+
+			b.box( x0, 1.0, z, x1, 1.6, z + 0.8, { side: 'rail_dark', top: 'trim_yellow', bottom: 'rail_dark' }, { keepBottom: true } );
+			for ( const x of [ x0 + 0.15, x1 - 0.15 ] ) b.box( x - 0.15, 0, z + 0.1, x + 0.15, 1.0, z + 0.7, 'rail_dark' );
+
+		}
 
 		// Z2: P1, its red face 3.6 m (run up it), the box stairs on the left (1.2 m risers to vault up).
 		b.plyBox( 2.5, 51, 6.5, 54, 0, 1.2, 's' );
@@ -116,6 +131,10 @@ export const DEPOT = {
 		b.box( - 6, 1.0, 129, 6, 1.6, 129.8, { side: 'rail_dark', top: 'trim_yellow', bottom: 'rail_dark' }, { keepBottom: true } );
 		for ( const x of [ - 6, 6 ] ) b.box( x - 0.15, 0, 129.1, x + 0.15, 1.0, 129.7, 'rail_dark' );
 		b.plyBox( - 2, 139, 2, 140.2, 0, 1.0, 'n' );
+		// The left lane on the floor: a bar to slide under, a rail to vault.
+		b.box( 5.2, 1.0, 123, 8.5, 1.6, 123.8, { side: 'rail_dark', top: 'trim_yellow', bottom: 'rail_dark' }, { keepBottom: true } );
+		for ( const x of [ 5.35, 8.35 ] ) b.box( x - 0.15, 0, 123.1, x + 0.15, 1.0, 123.7, 'rail_dark' );
+		b.pipeRail( 5.2, 138, 8.5, 138, 0, 1.0 );
 		for ( const sd of [ - 1, 1 ] ) b.plyBox( sd * 9 - 0.3, 115, sd * 9 + 0.3, 149, 0, 3.5, sd < 0 ? 'e' : 'w', true );
 
 		// Z5: M, the mezzanine run: a rail to vault, the duct to slide under, the second pit to slide-jump to B, or the
@@ -124,10 +143,12 @@ export const DEPOT = {
 		b.ladder( 4, 153, 0, P, '-z' );
 		b.meshRail( - 7.95, 153, - 7.95, 187, P ); b.meshRail( 7.95, 153, 7.95, 187, P );
 		b.pipeRail( - 4.5, 161, 4.5, 161, P, 1.0 );
+		b.pipeRail( 4.9, 168, 7.8, 168, P, 1.0 ); b.plyBox( - 6, 173, - 2, 174.2, P, P + 1.0, 'n' );
 		b.duct( - 2.5, P + 1, 183.5, 7.6, P + 1.7, 184.3 );
 		for ( const x of [ - 2.5, 7.6 ] ) b.box( x - 0.15, P, 183.5, x + 0.15, P + 1, 184.3, 'rail_dark' );
 		b.balanceBeam( - 4, 187, - 4, 192.5, P, - 2.5, { width: 0.3 } );
 		b.plyBox( - 8, 192.5, 8, 203, 0, P, 'ns', true );
+		b.plyBox( - 6, 197.5, - 2, 198.5, P, P + 1.0, 'n' );
 
 		// Z6: the long pit: the blocks to hop, rising, then the catch onto the tower; or the long beam on the right and
 		// the tower's ladder. The finish on the tower.

@@ -31,7 +31,7 @@ export const OLDTOWN = {
 	theme: 'haze',
 	unlock: 7,
 	rebuilt: true,
-	medals: [ 58, 50, 44.5, 41 ],
+	medals: [ 59, 50.5, 45, 41 ],
 	spawn: { x: 0, y: 12, z: - 6, yaw: 0 },
 	killY: - 0.8,
 	// The streets are the only ground: down there is a fall.
@@ -72,6 +72,7 @@ export const OLDTOWN = {
 		b.put( new THREE.CylinderGeometry( 1.3, 1.3, 2.6, 18 ), 'metal', - 3.4, 13.9, - 8.5, 1, 1, 1 );
 		b.w.col.add( - 4.7, 12, - 9.8, - 2.1, 15.2, - 7.2, 'metal' );
 		b.meshRail( - 5.9, - 12, - 5.9, 12, 12 ); b.meshRail( 5.9, - 12, 5.9, 12, 12 );
+		b.box( - 2.4, 12, 3, 2.4, 13, 3.8, { side: 'steel', top: 'metal' }, { surface: 'metal' } );
 
 		// S1, S2: timber houses to run up and over.
 		b.house( - 7, 15, 7, 29, 10, 2.6, 'x', 'fac_shoji', 'tile_roof' );
@@ -82,7 +83,9 @@ export const OLDTOWN = {
 
 		// C: the clay courtyard behind stone walls; boulders, stone lanterns.
 		b.box( - 15, 0, 45, 15, 1.5, 80, { top: 'clay', side: 'stone' } );
-		b.rock( - 6, 1.5, 58, 1.3 ); b.rock( 6, 1.5, 63, 1.0 ); b.rock( 0.5, 1.5, 67, 0.75 ); b.rock( 10, 1.5, 70, 1.1 );
+		b.rock( - 9.5, 1.5, 54, 1.3 ); b.rock( 6, 1.5, 61, 1.0 ); b.rock( 10, 1.5, 70, 1.1 );
+		// A low garden wall across the courtyard, to vault.
+		b.box( - 10, 1.5, 66, 5, 2.5, 66.8, { side: 'stone', top: 'pav_warm' } );
 		for ( const [ x, z ] of [ [ - 13, 49 ], [ 13, 49 ], [ - 13.4, 66 ], [ 13, 76 ] ] ) b.stoneLantern( x, 1.5, z );
 		b.tree( - 12.5, 1.5, 58, 1.1 ); b.tree( 11.5, 1.5, 54, 0.9 );
 		// The main hall on the left: a stone base, the timber body, tiered roofs.
@@ -133,6 +136,10 @@ export const OLDTOWN = {
 		b.box( - 5, - 2, 197, 5, 0.6, 207, 'stone', { collide: false } );
 		b.box( - 5.3, 3, 186, - 5, 4, 218, 'stone' ); b.box( 5, 3, 186, 5.3, 4, 218, 'stone' );
 		for ( const z of [ 190, 202, 214 ] ) b.stoneLantern( - 4.3, 3, z );
+		// On the bridge: a stone kerb to vault, a lantern arch to slide under.
+		b.box( - 3.6, 3, 197, 3.6, 4, 197.8, { side: 'stone', top: 'pav_light' } );
+		b.box( - 5, 4.0, 209, 5, 4.6, 209.8, { side: 'timber', top: 'timber', bottom: 'timber' }, { keepBottom: true } );
+		b.lantern( - 2, 3.7, 209.4, 'lantern_red', 0.6 ); b.lantern( 2, 3.7, 209.4, 'lantern_red', 0.6 );
 		b.zipline( [ 0, DECK + 2.4, 180 ], [ 0, 5.6, 222 ], { side: 2.5 } );
 
 		// The market: stalls under awnings that bounce, crates to vault; the last awning in the street throws the
@@ -147,7 +154,10 @@ export const OLDTOWN = {
 
 		}
 
-		b.crates( - 3.5, 3, 240, 3 ); b.crates( 3, 3, 232, 2 );
+		b.crates( - 5, 3, 236, 3 ); b.crates( 4, 3, 226, 2 );
+		// A barrow in the street to vault; a banner to slide under.
+		b.box( - 2, 3, 230, 2, 4, 231.4, 'wood' );
+		b.box( - 6, 4.0, 240, 6, 4.6, 240.3, { side: 'canvas_red', top: 'timber', bottom: 'canvas_red' }, { keepBottom: true } );
 		b.lanternLine( - 8, 7.5, 229, 8, 7.5, 229, { n: 6 } ); b.lanternLine( - 8, 7.5, 243, 8, 7.5, 243, { n: 6 } );
 		b.awning( - 2.5, 247.5, 2.5, 251, 4.4, 'canvas_red' );
 
@@ -157,6 +167,7 @@ export const OLDTOWN = {
 		b.scaffold( 2.6, 252.6, 5.4, 254, 3, 9.2 );
 		b.poster( 6.03, 5, 262, 3, 4.2, Math.PI / 2, 2 ); b.poster( - 6.03, 5, 270, 3, 4.2, - Math.PI / 2, 0 );
 		b.ac( 4, 8, 270 ); b.vent( - 4.4, 8, 259 );
+		b.box( - 3, 8, 262.6, 3, 9, 263.4, { side: 'steel', top: 'metal' }, { surface: 'metal' } );
 
 		// The temple: over its roof, drop and roll to the plaza, or the pole (on the right); the finish under the torii.
 		b.house( - 9, 279, 9, 299, 9, 3.5, 'x', 'fac_shoji3', 'tile_roof2' );

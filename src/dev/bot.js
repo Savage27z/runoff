@@ -5,12 +5,14 @@
 //
 // Waypoint fields (RUNOFF's): x, z the target; r the radius that counts as there; jumpAt / slideAt / slideHeld (feet)
 // what to press where; roll: hold Jump through a fast fall, the runner's landing roll; wallJump: jump off a wall run
-// that has lasted this long (s).
+// that has lasted this long (s); line: keep to the line from the last waypoint (a beam).
 
 import { ROUTES } from './routes.js';
 
 // A jump is a press held this many frames, then let go (the runner jumps as Jump is let go).
 const JUMP_FRAMES = 2;
+// On a `line` waypoint the bot aims this far ahead of itself along the line (m).
+const LINE_AHEAD = 2.5;
 
 /**
  * @param {Session} session a loaded session on the route's course
@@ -45,8 +47,20 @@ export function runRoute( session, waypoints, { seconds = 120, dt = 1 / 60 } = {
 		const dx = W.x - p.x, dz = W.z - p.z;
 		if ( w < waypoints.length - 1 && Math.hypot( dx, dz ) < ( W.r || 1.0 ) ) w ++;
 
-		// Steer by turning the view at the waypoint, forward held.
-		sim.view.yaw = Math.atan2( dx, dz );
+		// Steer by turning the view at the waypoint, forward held; on a `line` waypoint, at a point a little ahead on the
+		// line from the last waypoint to it, so the runner comes back onto that line (a beam's) rather than closing on
+		// the far end at a slant.
+		let aimX = W.x, aimZ = W.z;
+		if ( W.line && w > 0 ) {
+
+			const P = waypoints[ w - 1 ], sx = W.x - P.x, sz = W.z - P.z, length = Math.hypot( sx, sz );
+			const along = Math.min( length, Math.max( 0, ( ( p.x - P.x ) * sx + ( p.z - P.z ) * sz ) / length ) + LINE_AHEAD );
+			aimX = P.x + sx / length * along;
+			aimZ = P.z + sz / length * along;
+
+		}
+
+		sim.view.yaw = Math.atan2( aimX - p.x, aimZ - p.z );
 		keys.clear();
 		keys.add( 'KeyW' );
 		const onGround = runner.grounded || runner.state === 'sliding';

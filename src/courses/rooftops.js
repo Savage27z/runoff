@@ -2,7 +2,7 @@
 // line at the forks, built to docs/METRICS.md on a 3.1 m storey grid (roofs at 6.2, 9.8, 10.6, 11.2, 12.4, 16.2,
 // 17.4, 18.6, 22.2 m). Courses run toward +z; facing +z, +x is on the runner's left, where the sea is.
 //
-//  A  start roof · slide under the duct, jump the gap
+//  A  start roof · vault the hatch, slide under the duct, jump the gap
 //  B  vault the parapet · fork: wall-run the tower on the left and kick off it, or swing the bar on the right
 //  C  run up the 3.6 m wall to D, or climb its drainpipe
 //  D  ride the zipline across the street down to E
@@ -25,7 +25,7 @@ export const ROOFTOPS = {
 	unlock: 0,
 	// Rebuilt for the Trizen runner (the courses not yet rebuilt show as under construction).
 	rebuilt: true,
-	medals: [ 64, 55, 49, 45 ],
+	medals: [ 65, 55.5, 49.5, 45.5 ],
 	spawn: { x: 0, y: 18.6, z: - 6, yaw: 0 },
 	killY: 3,
 	checkpoints: [
@@ -75,6 +75,8 @@ export const ROOFTOPS = {
 		b.railing( - 6.85, - 12, - 6.85, 22, 18.6 ); b.railing( 6.85, - 12, 6.85, 22, 18.6 );
 		b.housing( - 6.5, - 11, - 3.5, - 8, 18.6, 2.6, 'fac_peach' );
 		b.ac( 5, 18.6, - 6 ); b.antenna( 5.5, 18.6, - 10, 7 ); b.vent( - 5, 18.6, 4 );
+		// The roof hatch to vault on the way to the duct.
+		b.box( - 2.4, 18.6, 3, 2.4, 19.6, 3.8, { side: 'steel', top: 'metal' }, { surface: 'metal' } );
 		b.duct( - 7, 19.55, 12, 7, 20.3, 12.8 );
 		b.box( - 6.9, 18.6, 12.2, - 6.5, 19.55, 12.6, 'steel' ); b.box( 6.5, 18.6, 12.2, 6.9, 19.55, 12.6, 'steel' );
 
@@ -95,6 +97,8 @@ export const ROOFTOPS = {
 		b.railing( - 5.85, 56, - 5.85, 80, 18.6 ); b.railing( 5.85, 70, 5.85, 80, 18.6 );
 		b.box( - 5, 18.6, 64, - 2.4, 18.85, 70, { top: 'glass', side: 'steel' } );
 		b.ac( 4.4, 18.6, 74 );
+		// A low duct on its stands across the roof, to vault.
+		b.duct( - 2, 18.6, 67, 5.85, 19.6, 67.8 );
 
 		// D: up 3.6 m, the zipline's mast at its far end.
 		b.building( - 7, 80, 7, 100, 22.2, 'fac_brick', '', { roof: 'pav_mint' } );
@@ -114,7 +118,9 @@ export const ROOFTOPS = {
 		// F: the fork down to G.
 		b.building( - 6, 146.5, 6, 168, 11.2, 'fac_mint', '', { roof: 'pav_lav' } );
 		b.railing( - 5.85, 146.5, - 5.85, 162, 11.2 ); b.railing( 5.85, 146.5, 5.85, 168, 11.2 );
-		b.ac( 4.2, 11.2, 156 );
+		b.ac( 4.2, 11.2, 160 );
+		// A low wall across F, to vault.
+		b.box( - 5.85, 11.2, 153, 5.85, 12.2, 153.35, 'parapet' );
 		// The safe line: the pole down to G (on the right).
 		b.pole( - 4, 169.6, 6.2, 12.8 );
 
@@ -135,12 +141,17 @@ export const ROOFTOPS = {
 		// J: a storey lower; K's wall two storeys up: its ladder or its pipe.
 		b.building( - 6, 213.5, 6, 238, 11.2, 'fac_sky', '', { roof: 'pav_light' } );
 		b.railing( 5.85, 213.5, 5.85, 238, 11.2 );
-		b.ac( 4, 11.2, 224 ); b.vent( - 3.6, 11.2, 228 );
+		b.ac( 4, 11.2, 222 ); b.vent( - 4.8, 11.2, 234 );
+		// A duct across J to slide under.
+		b.duct( - 5.85, 12.2, 227, 5.85, 12.9, 227.8 );
+		b.box( - 5.85, 11.2, 227, - 5.5, 12.2, 227.8, 'steel' ); b.box( 5.5, 11.2, 227, 5.85, 12.2, 227.8, 'steel' );
 		b.building( - 7, 238, 7, 256, 17.4, 'fac_brick', '', { roof: 'pav_mint' } );
 		b.railing( - 6.85, 238, - 6.85, 256, 17.4 ); b.railing( 6.85, 238, 6.85, 256, 17.4 );
 		b.ladder( 2, 238, 11.2, 6.2, '-z' );
 		b.pipe( - 3, 238, 11.2, 17.4, '-z' );
 		b.antenna( - 5.8, 17.4, 242, 5 );
+		// K's parapet to vault before the bar.
+		b.box( - 6.85, 17.4, 246, 6.85, 18.4, 246.35, 'parapet' );
 
 		// K to L: a swing bar over the gap.
 		b.swingBar( - 2, 257.6, 2, 257.6, 19.7, 0 );

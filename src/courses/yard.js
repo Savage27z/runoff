@@ -5,7 +5,7 @@
 // its wall, its ladder), the slide-jump, the drop into the finish. Built to docs/METRICS.md. Courses run toward +z;
 // facing +z, +x is on the runner's left.
 //
-//  Z1  the vault garden: vault the blocks down the middle, or run the lanes beside them
+//  Z1  the vault garden: vault the blocks down the middle, or the lanes beside them (bars to slide, rails to vault)
 //  Z2  up the ramp to deck A; over the pit along the beam, or swing the bar on the left
 //  Z3  deck B: wall-run the green panel on the left across the pit (or walk the balance beam on the right) to deck C;
 //      wall-run the panel on the right (or swing the bar on the left) to deck D
@@ -33,7 +33,7 @@ export const YARD = {
 	theme: 'haze',
 	unlock: 9,
 	rebuilt: true,
-	medals: [ 59, 50.5, 45, 41.5 ],
+	medals: [ 59.5, 51, 45.5, 41.5 ],
 	spawn: { x: 0, y: 0, z: - 6, yaw: 0 },
 	killY: - 6,
 	// The pits' floors are a fall.
@@ -53,7 +53,7 @@ export const YARD = {
 	],
 	hints: [
 		hint( - 12, 2, 'Training Yard: every move in the book. Keep the flow.' ),
-		hint( 2, 14, 'Vault the line down the middle · or run the lanes' ),
+		hint( 2, 14, 'Vault the line down the middle · or the lanes: <b>slide</b> and vault' ),
 		hint( 70, 77, 'Run the beam · or swing the <b>bar</b> ←', 1 ),
 		hint( 90, 100, '← <b>Wall-run</b> the green panel, <k>Space</k> to kick off · or walk the <b>beam</b> →', 1 ),
 		hint( 110, 118, '<b>Wall-run</b> the panel → · or swing the <b>bar</b> ←', 1 ),
@@ -100,15 +100,33 @@ export const YARD = {
 			[ 7, 26, 11, 30, 1.8, 'w' ], [ - 11, 34, - 7, 38, 1.2, '' ], [ 7, 42, 11, 46, 1.6, 'w' ],
 		] ) b.yardBlock( x0, z0, x1, z1, 0, h, g );
 		b.wallPanel( - 6.6, 12, - 6, 18, 0, 3.4 ); b.wallPanel( 6, 30, 6.6, 36, 0, 3.4 );
+		// The lanes: bars to slide under and rails to vault, by turns (a slide wants 1.8 s before the next one).
+		for ( const [ sd, z, slide ] of [ [ 1, 10, true ], [ 1, 22, false ], [ 1, 34, true ], [ 1, 46, false ], [ - 1, 16, true ], [ - 1, 28, false ], [ - 1, 40, true ] ] ) {
+
+			const x0 = sd > 0 ? 2.1 : - 5.4, x1 = sd > 0 ? 5.4 : - 2.1;
+			if ( ! slide ) {
+
+				b.pipeRail( x0, z, x1, z, 0, 1.0 );
+				continue;
+
+			}
+
+			b.box( x0, 1.0, z, x1, 1.6, z + 0.8, { side: 'conc', top: 'trim_yellow', bottom: 'conc' }, { keepBottom: true } );
+			for ( const x of [ x0 + 0.15, x1 - 0.15 ] ) b.box( x - 0.15, 0, z + 0.1, x + 0.15, 1.0, z + 0.7, 'conc' );
+
+		}
+
 		b.pipeRail( - 12, 26, - 12, 44, 0 ); b.pipeRail( 12, 2, 12, 20, 0 );
 
 		// Z2: the ramp up to deck A; over the first pit along the beam, or the swing bar on the left; deck B.
 		b.ramp( - 4, 4, 51, 58, 0, DECK, null, { land: 0.5 } );
 		b.yardBlock( - 8, 58.25, 8, 77, - 4, DECK, 'n' );
 		b.pipeRail( - 7.8, 58.25, - 7.8, 77, DECK );
+		b.yardBlock( - 3, 64.6, 4.5, 65.8, DECK, DECK + 1.0, 's' );
 		b.beam( 0, 77, 84, DECK, 0.5, - 4 );
 		b.swingBar( 1.5, 78.6, 4.5, 78.6, DECK + 2.3, - 4 );
 		b.yardBlock( - 8, 84, 8, 100, - 4, DECK, 's' );
+		b.yardBlock( 0, 88, 6, 89.2, DECK, DECK + 1.0, 's' );
 
 		// Z3: the wall-run lanes. The green panel on the left (its face at x 5) across to deck C, or the balance beam on
 		// the right; the panel on the right (its face at x -5) across to deck D, or the bar on the left.
@@ -139,12 +157,17 @@ export const YARD = {
 		b.torii( 0, 0, 212, 9, 6 );
 		b.rock( - 9, 0, 196, 1.3 ); b.rock( 9, 0, 204, 1.0 ); b.rock( 10, 0, 224, 1.2 );
 		b.tree( - 10, 0, 218, 1.2 ); b.tree( 10, 0, 190, 1.0 );
+		b.yardBlock( - 3, 221, 3, 222.2, 0, 1.0, 's' );
+		b.yardBlock( - 8, 196, - 2, 197.2, 0, 1.0, 's' );
 		for ( const [ x, z ] of [ [ - 12, 206 ], [ 12, 214 ] ] ) b.stoneLantern( x, 0, z );
 
 		// Z7: the second pit: the pillars down the middle, or the ramp and the long beam on the right; deck F.
 		for ( const { z, top } of PILLARS ) b.yardBlock( - 1.25, z, 1.25, z + 3, - 4, top, 's' );
 		b.ramp( - 8, - 3, 220, 232, 0, DECK, null, { land: 0.5 } );
 		b.beam( - 5.5, 232.25, 262, DECK, 0.5, - 4 );
+		// Half way along the beam, a platform with a block to vault.
+		b.yardBlock( - 7, 245, - 4, 249, - 4, DECK, '' );
+		b.yardBlock( - 7, 246.4, - 4, 247.4, DECK, DECK + 1.0, 's' );
 
 		// Z8: deck F with its trampoline (flush in the deck: run over it); H 3.6 m up: bounce onto it, run up its wall,
 		// or its ladder on the left.

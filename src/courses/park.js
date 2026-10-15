@@ -28,7 +28,7 @@ export const PARK = {
 	theme: 'day',
 	unlock: 5,
 	rebuilt: true,
-	medals: [ 58, 49.5, 44, 40.5 ],
+	medals: [ 59, 50.5, 45, 41 ],
 	spawn: { x: 0, y: 6, z: - 8, yaw: 0 },
 	killY: - 1.4,
 	env: { water: { y: - 1.5 }, birds: [ 0, 20, 150 ], hills: { radius: 1400, height: [ 40, 110 ] } },
@@ -73,6 +73,8 @@ export const PARK = {
 		b.bowl( - 19, - 9, - 9, 5, 6, 1.8 );
 		b.concPlanter( 5, - 11, 8.6, - 6.5, 6 );
 		b.bench( - 7.6, 6, - 2, 1 );
+		// A long low planter across T1, to vault.
+		b.concPlanter( - 3, 1, 9, 1.9, 6, 0.9, { tree: false } );
 		b.meshRail( 8.9, - 12, 8.9, 2, 6 ); b.meshRail( - 23.9, - 12, - 23.9, 10, 6 );
 		b.vines( - 24, 10.02, - 9, 10.02, 6, { density: 0.8, len: [ 1, 3.2 ], out: [ 0, 1 ] } );
 		b.building( - 12, - 28, 8, - 12, 15, 'fac_conc', '', { roof: 'pav_light', trim: 'conc' } );
@@ -85,6 +87,7 @@ export const PARK = {
 		b.terrace( - 12, 14, 12, 34, 3, 'pav_warm' );
 		b.concPlanter( - 3, 25, 3, 26.2, 3, 0.9, { tree: false } );
 		b.concPlanter( - 11.4, 15, - 7, 21, 3 ); b.concPlanter( 8, 27, 11.4, 32, 3 );
+		b.concPlanter( - 5, 19, 2, 20.2, 3, 0.9, { tree: false } );
 		b.meshRail( - 11.9, 14, - 11.9, 34, 3 ); b.meshRail( 11.9, 14, 11.9, 34, 3 );
 		b.vines( - 12, 34.02, 12, 34.02, 3, { density: 0.7, len: [ 0.6, 2.4 ], out: [ 0, 1 ] } );
 		b.dumpster( 8.5, 36.4 ); b.crates( - 3, 0, 36.6, 2 );
@@ -92,10 +95,14 @@ export const PARK = {
 
 		// T3: the plinth up to the bridge walkway (its face 3.6 m: run up it, or its ladder), the block on the right.
 		b.terrace( - 12, 39, 12, 64, 3, 'pav_light' );
+		b.concPlanter( - 3, 55, 1, 56.2, 3, 0.9, { tree: false } );
 		b.building( - 12, 46, - 4, 60, 10, 'fac_conc2', '', { roof: 'pav_light', trim: 'conc' } );
 		b.box( 4, 3, 47.5, 8, 6.6, 51.2, { top: 'pav_light', side: 'conc' } );
 		b.ladder( 7.2, 47.5, 3, 3.6, '-z' );
 		b.walkway( 4, 8, 51.2, 82, 6.6 );
+		// On the walkway: a sign gantry to slide under, a barrier to vault.
+		b.box( 4, 7.6, 62, 8, 8.2, 62.8, { side: 'conc', top: 'trim_yellow', bottom: 'conc' }, { keepBottom: true } );
+		b.box( 4.15, 6.6, 73, 7.85, 7.6, 73.8, { side: 'rail_dark', top: 'trim_yellow' } );
 		b.meshRail( 11.9, 39, 11.9, 64, 3 );
 		b.vines( 4, 51.2, 4, 82, 6.15, { density: 0.35, len: [ 0.8, 2.5 ], out: [ - 1, 0 ] } );
 
@@ -107,11 +114,12 @@ export const PARK = {
 		b.box( 1.6, 0, 86, 2, 1.0, 86.8, 'steel' );
 		b.sign( - 5, 3, 86.9, 6, 1.4, 'LOW CLEARANCE', '#ffb020', Math.PI, { font: 'bold 110px Anton, Impact, sans-serif' } );
 		b.stairs( - 10, - 4, 98, 0, 10, { rise: 0.15, run: 0.4, dir: 1, land: 0.5 } );
+		b.box( - 10, 0, 94, - 3, 1.0, 94.8, { side: 'conc', top: 'pav_light' } );
 		for ( const z of [ 70, 80, 92 ] ) b.cone( - 1.5, 0, z );
 
 		// The brick roof at the walkway's end: the zipline over the plaza, or its pole down.
 		b.building( 2, 82, 16, 102, 6.6, 'fac_redbrick', '', { roof: 'roof' } );
-		b.ac( 13.5, 6.6, 85 ); b.vent( 14.5, 6.6, 97 );
+		b.ac( 13.5, 6.6, 85 ); b.vent( 14.5, 6.6, 97 ); b.ac( 9, 6.6, 86 );
 		b.zipline( [ 9, 9, 92 ], [ 9, 4.1, 138 ] );
 		b.meshRail( 2.2, 82, 2.2, 102, 6.6 );
 		b.pole( 6, 103.6, 1.5, 8.2 );
@@ -122,6 +130,8 @@ export const PARK = {
 		b.terrace( - 16, 102, - 10, 102.25, 1.5, 'pav_light' ); b.terrace( - 4, 102, 16, 102.25, 1.5, 'pav_light' );
 		b.concPlanter( - 15.4, 110, - 11, 117, 1.5 ); b.concPlanter( 11, 119, 15.4, 126, 1.5 );
 		b.concPlanter( - 3, 124, 3, 125.4, 1.5, 0.9, { tree: false } );
+		b.concPlanter( - 9, 113, - 1, 114.2, 1.5, 0.9, { tree: false } );
+		b.concPlanter( - 4, 135, 4, 136.2, 1.5, 0.9, { tree: false } );
 		b.concPlanter( - 15.4, 130, - 11, 137, 1.5 );
 		b.bench( 12.5, 1.5, 112, 1 ); b.bench( - 9, 1.5, 128, 0 );
 		for ( const [ x, z ] of [ [ - 6, 118 ], [ - 6, 138 ] ] ) b.lamp( x, 1.5, z, 5, '#ffe3b0' );
@@ -129,9 +139,14 @@ export const PARK = {
 
 		// The promenade; the footbridge over the river with its gantry to slide under; the pylons on its left.
 		for ( const x of [ - 30, - 18, 18, 30 ] ) b.tree( x, 0, 150, 1.2 );
+		b.concPlanter( 6, 151, 10, 152.2, 0, 0.9, { tree: false } );
 		b.stairs( - 3, 3, 149.5, 0, 20, { rise: 0.15, run: 0.4, dir: 1, land: 0.5 } );
 		b.walkway( - 3, 3, 157.75, 210, 3, { columns: 12 } );
 		b.box( - 3, 4.0, 191.6, 3, 4.6, 192.4, { side: 'conc', top: 'trim_yellow', bottom: 'conc' }, { keepBottom: true } );
+		// Over the footbridge: gantries to slide under, barriers to vault.
+		b.box( - 2.85, 3, 172, 2.85, 4, 172.8, { side: 'rail_dark', top: 'trim_yellow' } );
+		b.box( - 2.85, 3, 203, 2.85, 4, 203.8, { side: 'rail_dark', top: 'trim_yellow' } );
+		b.box( - 3, 4.0, 164, 3, 4.6, 164.8, { side: 'conc', top: 'trim_yellow', bottom: 'conc' }, { keepBottom: true } );
 		for ( const x of [ - 2.8, 2.8 ] ) b.box( x - 0.2, 3, 191.7, x + 0.2, 4.0, 192.3, 'conc' );
 		for ( let z = 158.5; z < 208; z += 12 ) b.box( - 0.7, - 3, z - 0.2, 0.7, 0, z + 0.9, 'conc' );
 		for ( const { z, top } of PYLONS ) b.box( 6.8, - 3, z, 9.2, top, z + 4, { top: 'pav_light', side: 'conc' }, { shade: [ 0.5, 1 ] } );
@@ -141,14 +156,19 @@ export const PARK = {
 		b.terrace( - 14, 208, 14, 232, 3, 'pav_warm' );
 		b.concPlanter( - 13, 214, - 8.5, 221, 3 ); b.concPlanter( 8.5, 222, 13, 229, 3 );
 		b.concPlanter( - 2.5, 223, 2.5, 224.2, 3, 0.9, { tree: false } );
+		b.box( - 8.5, 3, 216.5, 8.5, 4, 217.3, { side: 'conc', top: 'pav_light' } );
 		b.meshRail( - 13.9, 208, - 13.9, 232, 3 ); b.meshRail( 13.9, 208, 13.9, 232, 3 );
 		b.terrace( - 14, 236.5, 14, 256, 3, 'pav_light' );
 		b.building( - 14, 240, - 5, 254, 11, 'fac_conc', '', { roof: 'pav_light', trim: 'conc' } );
 		b.concPlanter( 6, 241, 13, 246, 3 );
+		b.concPlanter( - 4.5, 247, 5.5, 248.2, 3, 0.9, { tree: false } );
 		b.box( - 2.5, 3, 256, 2.5, 6.6, 261.25, { top: 'pav_light', side: 'conc' } );
 		b.pipe( 1.6, 256, 3, 6.6, '-z' );
 		b.walkway( - 2.5, 2.5, 261.25, 290, 6.6 );
+		b.box( - 2.5, 7.6, 272, 2.5, 8.2, 272.8, { side: 'conc', top: 'trim_yellow', bottom: 'conc' }, { keepBottom: true } );
+		b.box( - 2.35, 6.6, 282, 2.35, 7.6, 282.8, { side: 'rail_dark', top: 'trim_yellow' } );
 		b.building( - 8, 290, 10, 310, 6.6, 'fac_redbrick', '', { roof: 'roof' } );
+		b.box( - 3, 6.6, 296, 3, 7.6, 296.8, { side: 'steel', top: 'metal' }, { surface: 'metal' } );
 		b.ac( 6.5, 6.6, 296 ); b.vent( - 6, 6.6, 300 );
 		b.ramp( - 3, 3, 310, 324, 6.6, 1.5, 0 );
 		b.terrace( - 14, 312, 14, 345, 1.5, 'pav_lav' );

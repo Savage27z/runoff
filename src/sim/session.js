@@ -229,6 +229,16 @@ export class Session {
 
 			}
 
+			// A vault keeps the run's speed (a speed vault, as in Mirror's Edge; the core's vault lands at its take's own
+			// pace, about 4 m/s), so an obstacle in the way is part of the line, not a brake on it.
+			if ( runner.state === 'vaulting' && before.state !== 'vaulting' ) this.vaultedIn = this.runSpeed;
+			if ( before.state === 'vaulting' && runner.state !== 'vaulting' && this.vaultedIn > runner.speed ) {
+
+				setSpeed( runner, this.vaultedIn );
+				this.vaultedIn = 0;
+
+			}
+
 			// Out of a landing roll the run goes on at the speed it rolled in with and a little more (RUNOFF's roll kept the
 			// speed; the core's roll ends at its take's own pace).
 			if ( runner.state === 'rolling' && before.state !== 'rolling' ) this.rolledIn = this.runSpeed;

@@ -4,7 +4,7 @@
 // the barge, crosses the pontoons and climbs the container pyramid on Terminal 2. Built to docs/METRICS.md. Courses run
 // toward +z; facing +z, +x is on the runner's left.
 //
-//  A   the warehouse roof · jump the first stacks
+//  A   the warehouse roof · vault the skylight, jump the first stacks
 //  S3  fork: the high line ahead (narrow rows, a wall run along a four-high stack and its kick over the wide gap) or the pole down to the alley
 //      on the right (crates to vault, a duct to slide under, the ladder up the big stack)
 //  C   the big stack: the zipline over the quay
@@ -27,7 +27,7 @@ export const DOCKS = {
 	theme: 'night',
 	unlock: 1,
 	rebuilt: true,
-	medals: [ 62, 52, 45, 41.5 ],
+	medals: [ 60, 51, 45.5, 42 ],
 	spawn: { x: 0, y: 8, z: - 16, yaw: 0 },
 	killY: - 0.8,
 	env: { water: { y: - 1.2 }, birds: [ 0, 16, 90 ] },
@@ -64,6 +64,8 @@ export const DOCKS = {
 		b.building( - 12, - 22, 12, 6, 8, 'metal', '', { roof: 'metal' } );
 		b.box( - 12, 8, - 22, 12, 8.3, - 21.7, 'metal' );
 		b.vent( - 8, 8, - 18 ); b.vent( 8, 8, - 12 );
+		// The roof's skylight ridge, to vault on the way to the stacks.
+		b.box( - 3.2, 8, - 6.6, 3.2, 9, - 5.8, { side: 'steel', top: 'glass' }, { surface: 'metal' } );
 		b.bunting( - 2.44, 9.5, 8, - 2.44, 9.2, 20, { n: 12, sag: 0.6 } );
 
 		// S1, S2: three high; S3 two high, the fork at its end.
@@ -124,6 +126,8 @@ export const DOCKS = {
 		}
 
 		b.swingBar( - 2, 219.4, 1.4, 219.4, 3.3, - 1.2 );
+		// Cargo lashed on the second pontoon, to vault.
+		b.box( - 4.2, 1, 227, 4.2, 2, 228.2, 'wood' );
 		b.balanceBeam( 3.4, 218, 3.4, 224, 1, - 1.2 );
 		b.lamp( - 5.5, 1, 221, 5, '#9fd8ff' ); b.lamp( 5.5, 1, 221, 5, '#9fd8ff' );
 

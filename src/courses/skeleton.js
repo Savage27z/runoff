@@ -31,7 +31,7 @@ export const SKELETON = {
 	theme: 'day',
 	unlock: 3,
 	rebuilt: true,
-	medals: [ 64, 55, 49, 45.5 ],
+	medals: [ 65, 56, 50, 45.5 ],
 	spawn: { x: 0, y: 0, z: - 14, yaw: 0 },
 	killY: - 3,
 	// Up on the frame, the ground is a fall (the safety net and the finish are not).
@@ -77,6 +77,8 @@ export const SKELETON = {
 		b.box( - 4, 0, 8.8, 4, 4.8, 9, 'plywood' );
 		b.plankDeck( - 4, 9, 4, 22, 5.0 );
 		b.scaffold( - 4, 9, 4, 22, 0, 6.5 );
+		// Pallets stacked on the deck, to vault.
+		b.box( - 4, 5.0, 15, 4, 6.0, 16.2, 'wood' );
 
 		// L1: the beam to slide under, the crates to vault, hazard rails along its sides.
 		b.slab( - 6, 22, 6, 40, 5.0 );
@@ -96,6 +98,8 @@ export const SKELETON = {
 		b.ladder( - 4, 62, 5.0, 3.6, '-z' );
 		floor( b, 74, 90, 8.6, 11.0 );
 		b.pipe( 4, 74, 8.6, 11.0, '-z' );
+		// Formwork stacked on L4, to vault.
+		b.box( - 6, 11.0, 82, 6, 12.0, 83.2, 'plywood' );
 
 		// The void: the girder across, a second one beside it, the safety net under them.
 		b.ibeam( - 0.25, 90, 0.25, 104, 11.0, 'beam_yellow' );
@@ -117,6 +121,8 @@ export const SKELETON = {
 		floor( b, 168, 182, 16.4, 20.0 );
 		b.ladder( 4, 168, 16.4, 3.6, '-z' );
 		floor( b, 182, 200, 20.0, 22.4 );
+		// Formwork on the top deck, to vault.
+		b.box( - 6, 22.4, 190, 6, 23.4, 191.2, 'plywood' );
 		b.box( - 6, 22.4, 198.6, - 2, 25, 198.8, 'plywood', { collide: false } );
 		b.sign( - 4, 24.2, 198.5, 4, 1, 'TOPPED OUT', '#ff5a1f', Math.PI, { glow: false, bg: '#1b1f2a' } );
 
@@ -124,6 +130,8 @@ export const SKELETON = {
 		b.box( - 1, 22.0, 200, 1, 22.4, 226, { top: 'metal', side: 'beam_yellow' } );
 		b.pipeRail( - 1.05, 200, - 1.05, 226, 22.4 );
 		b.pipeRail( 1.05, 200, 1.05, 226, 22.4 );
+		// The crane's trolley hangs over the catwalk: slide under it.
+		b.box( - 1.1, 23.4, 213, 1.1, 24.3, 214.4, { side: 'beam_yellow', top: 'metal', bottom: 'beam_yellow' }, { keepBottom: true } );
 		b.lattice( - 1, 20.4, 200, 1, 22.0, 232, 'beam_yellow', 'z', 2 );
 		b.box( - 2.5, 21.0, 226, 2.5, 22.4, 232, { side: 'c_yellow', top: 'metal' } );
 		b.lattice( 8.8, 0, 210, 11.2, 30, 212.4, 'beam_yellow', 'y', 2.4 );

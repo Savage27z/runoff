@@ -81,3 +81,18 @@ A rise of +2 m or more is not landed on: it is a climb (below).
   the runner vaults it (`gableRoof()` makes each ridge one peaked solid).
 - A landing right on the join between two roof slices loses some speed for a moment (the next slice's edge); landing
   mid-slice keeps it.
+
+## Obstacles on the way
+
+Parkour games keep the runner busy and moving: Mirror's Edge's lines never ask it to stop, Dying Light built its levels
+around the moves, and every one varies the rhythm (a vault, a slide, a gap, a climb). Here, measured with
+`node tools/flow.mjs` (the bot's routes, a move counted at each change into a move's state):
+
+- The fast line makes a move every 1 to 1.5 s, and runs plain (on the ground, nothing to do) for no more than about
+  2 s (17 m) at a time; a safe line can run a little plainer (its beams and ladders are slow on their own).
+- Mix them: a rail or a box to vault, a bar or a duct to slide under, a gap, a step up or down. Vaults keep the run's
+  speed (a speed vault), so an obstacle on the line costs nothing taken cleanly.
+- A slide wants 1.8 s before the next one (the core's cooldown, about 20 m at a slide's speed): bars to slide under
+  on one line at least 22 m apart, a vault between them.
+- Leave the run-up clear before a jump that needs speed or timing (a wall-run, a long gap, a catch): about 6 m.
+- Put an obstacle where both lines cross the same ground, or one on each line, so the safe line has its rhythm too.
