@@ -9,7 +9,12 @@
 		"sync-assets": "node scripts/sync-assets.mjs",
 		"dev": "vite",
 		"build": "vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"add-characters": "node tools/characters/add-all.mjs",
+		"courses": "node tools/courses.mjs",
+		"routes": "node tools/routes.mjs",
+		"flow": "node tools/flow.mjs all all 2.5",
+		"kit": "node tools/kit.mjs"
 	},
 	"dependencies": {
 		"@trizendigital/parkour": "0.1.0",
