@@ -17,6 +17,8 @@ export const DEFAULT_SETTINGS = Object.freeze( {
 	// Master volume, 0–1.
 	volume: 0.8,
 	hints: true,
+	// Your best run on a course, run beside you as a ghost.
+	ghost: true,
 	showFps: false,
 } );
 

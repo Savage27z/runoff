@@ -13,6 +13,7 @@ import { RunnerFigure } from '../figure/runnerFigure.js';
 import { CHARACTERS, characterById } from '../figure/characters.js';
 import { Trial, medalFor } from './trial.js';
 import { Style } from './style.js';
+import { GhostPlayer, GhostRecorder, clearGhosts, loadGhost, saveGhost } from './ghost.js';
 import { Save } from './save.js';
 import { Sound } from '../audio/sound.js';
 
@@ -148,6 +149,8 @@ export class Game {
 			if ( ! on && this.mode === 'play' ) this.pause();
 
 		};
+		this.recorder = new GhostRecorder( figure );
+		await this.loadGhost();
 		this.trial = new Trial( this.map, session, this.course.world.group, this.save.course( this.map.id ).best != null ? this.save.course( this.map.id ) : null );
 		this.trial.onSplit = ( split ) => {
 
@@ -159,9 +162,33 @@ export class Game {
 
 	}
 
+	// The ghost of the best run on this course, worn by the runner on the stage (the one before let go of).
+	async loadGhost( ghost = undefined ) {
+
+		this.ghost?.dispose();
+		this.ghost = null;
+		const map = this.map, figure = this.session?.sim.figure;
+		ghost ??= await loadGhost( map.id );
+		if ( ! ghost || ! figure || map !== this.map || figure !== this.session?.sim.figure ) return;
+		this.ghost = new GhostPlayer( ghost, figure, this.stage.scene );
+		this.ghost.root.visible = false;
+
+	}
+
+	/** Forgets every ghost (with the progress reset), the one on the stage too. */
+	forgetGhosts() {
+
+		clearGhosts();
+		this.ghost?.dispose();
+		this.ghost = null;
+
+	}
+
 	unloadRun() {
 
 		if ( ! this.session ) return;
+		this.ghost?.dispose();
+		this.ghost = null;
 		this.trial?.dispose();
 		this.session.dispose();
 		this.session.sim.figure.root.removeFromParent();
@@ -235,6 +262,7 @@ export class Game {
 		this.trial.best = this.save.course( this.map.id ).best != null ? this.save.course( this.map.id ) : null;
 		this.trial.start();
 		this.style.reset();
+		this.recorder.reset();
 		this.mode = 'play';
 		this.ui?.show( 'hud' );
 		this.ui?.hud.reset( this.map );
@@ -275,6 +303,10 @@ export class Game {
 
 			record.best = result.time;
 			record.splits = result.splits;
+			// The new best run is the ghost from now on.
+			const ghost = this.recorder.take( result.time, this.character.id );
+			saveGhost( this.map.id, ghost );
+			this.loadGhost( ghost );
 
 		}
 
@@ -392,10 +424,23 @@ export class Game {
 
 			if ( session.sim.paused ) this.pause();
 			this.trial.update( dt, this.elapsed );
-			if ( this.trial.started && ! this.trial.done ) this.style.update( dt, session.runner );
+			if ( this.trial.started && ! this.trial.done ) {
+
+				this.style.update( dt, session.runner );
+				this.recorder.sample( this.trial.t );
+
+			}
 			this.sound.frame( session );
 
 		} else this.trial?.update( 0, this.elapsed );
+
+		// The ghost runs the trial's clock beside the runner (waiting on the line until it starts); not in the menus.
+		if ( this.ghost ) {
+
+			this.ghost.root.visible = playing && this.save.data.settings.ghost;
+			if ( this.ghost.root.visible ) this.ghost.show( this.trial.t );
+
+		}
 
 		this.course.world.update( this.elapsed, dt );
 		this.env.update( this.elapsed );

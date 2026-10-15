@@ -428,6 +428,7 @@ export class UI {
 			video: segments( 'quality', 'Graphics', 'Lower draws fewer pixels and drops the shadows: smoother on laptops.', [ [ 'high', 'High' ], [ 'medium', 'Medium' ], [ 'low', 'Low' ] ] ) + toggle( 'showFps', 'Show frame rate', 'The frames a second, in the corner while running.' ),
 			audio: slider( 'volume', 'Volume', 'Footsteps, landings, the wind and the game\'s sounds.', 0, 1, 0.05, shows.volume ),
 			game: toggle( 'hints', 'Course hints', 'The tips that show where each move is first needed.' ) +
+				toggle( 'ghost', 'Ghost', 'Your best run on the course, running beside you.' ) +
 				`<div class="row-set"><span class="label">Reset progress<span class="help">Forget every best time, medal and star. Settings and your runner stay.</span></span><button class="btn danger small" data-nav data-reset><span>Reset</span></button></div>` +
 				`<div class="row-set"><span class="label">Default settings<span class="help">Every setting back to how it started.</span></span><button class="btn small" data-nav data-defaults><span>Restore</span></button></div>`,
 		};
@@ -474,6 +475,7 @@ export class UI {
 			if ( button.dataset.sure ) {
 
 				game.save.reset();
+				game.forgetGhosts();
 				button.querySelector( 'span' ).textContent = 'Done';
 				return;
 
