@@ -51,7 +51,7 @@ A rise of +2 m or more is not landed on: it is a climb (below).
 | Ladder | run into it: climbs, tops out | 0.5 m wide |
 | Zipline | jump up at it: rides from the high end, thrown off at the low end | the cable 2.2–2.6 m over where it is jumped at |
 | Swing bar | jump at it within 50° of square: swings and launches forward | 2.2–2.4 m over the take-off |
-| Balance beam | walk onto it | 0.15 m wide |
+| Balance beam | walk onto it: the arms go out, but it keeps the run's speed, so staying on is steering | 0.15 m wide; 0.3 m where it is the safe line |
 
 ## Landings (RUNOFF's rules)
 

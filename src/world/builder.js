@@ -762,8 +762,9 @@ export class Builder {
     this.w.box(x0 - 0.01, y1 - 0.01, z0 - 0.01, x1 + 0.01, y1 + 0.04, z1 + 0.01, 'trim_yellow', { collide: false });
   }
 
-  // Green ramp rising from y0 at z0 to y1 at z1 (z1 > z0 rises forward, else backward). Walkable (stepped collision).
-  ramp(x0, x1, z0, z1, y0, y1, base = null) {
+  // Green ramp rising from y0 at z0 to y1 at z1 (z1 > z0 rises forward, else backward). Walkable. `land` carries its
+  // solid on flat past z1, as stairs() do: a floor met at the top of a ramp going up should start inside it.
+  ramp(x0, x1, z0, z1, y0, y1, base = null, { land = 0 } = {}) {
     const bse = base ?? Math.min(y0, y1) - 0.01;
     this.surface(2, 2, (i, j) => { const z = i ? z1 : z0, y = i ? y1 : y0, x = j ? x1 : x0; return [x, y + 0.02, z, x / 2, z / 2]; }, 'paint_green', [0, 1, 0]);
     for (const x of [x0, x1]) {
@@ -779,7 +780,12 @@ export class Builder {
     this.w.box(x0, y1 - 0.01, Math.min(z1, z1 - 0.07 * Math.sign(z1 - z0)), x1, y1 + 0.03, Math.max(z1, z1 - 0.07 * Math.sign(z1 - z0)), 'trim_yellow', { collide: false });
     // A true slope: one wedge (RUNOFF stepped it in 0.28 m boxes), its ends flush with the floors it joins (the drawn
     // surface's 2 cm lift as a lip there stops a runner dead).
-    this.w.col.addRampZ(x0, x1, z0, z1, y0, y1, Math.min(bse, Math.min(y0, y1) - 0.05), 'concrete');
+    const foot = Math.min(bse, Math.min(y0, y1) - 0.05);
+    if (!land) this.w.col.addRampZ(x0, x1, z0, z1, y0, y1, foot, 'concrete');
+    else {
+      const zLand = z1 + Math.sign(z1 - z0) * land;
+      this.w.col.addProfileZ(x0, x1, [[z0, foot], [zLand, foot], [zLand, y1], [z1, y1], [z0, y0]]);
+    }
   }
 
   // Concrete balance beam on posts (top at y) across a gap, running along z.

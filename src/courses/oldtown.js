@@ -18,6 +18,7 @@
 
 import * as THREE from 'three';
 import { gate, hint } from './gates.js';
+import { townFill } from './town.js';
 
 // The drying decks either side of the lane, and the tall block on its left.
 const DECK = 6.8;
@@ -119,7 +120,7 @@ export const OLDTOWN = {
 
 		}
 
-		b.balanceBeam( - 4, 166, - 4, 172.5, DECK, 0 );
+		b.balanceBeam( - 4, 166, - 4, 172.5, DECK, 0, { width: 0.3 } );
 		b.building( 4.5, 154, 10, 186, 16, 'fac_conc', '', { roof: 'pav_light', trim: 'trim_green' } );
 		b.poster( 4.47, 11, 168, 3, 4, - Math.PI / 2, 3 ); b.poster( 4.47, 11, 178, 3, 4, - Math.PI / 2, 1 );
 		b.arrow( 4.45, DECK + 2.2, 167, 4.5, 1.1, - Math.PI / 2, '#ffb020' );
@@ -166,30 +167,7 @@ export const OLDTOWN = {
 		b.tree( - 11, 3, 338, 1.2 ); b.tree( 11, 3, 338, 1.2 );
 
 		// The rest of the town: rows of houses, a few modern blocks with posters, a lattice tower.
-		const keep = [ [ - 16, - 20, 16, 345 ], [ 14, 38, 44, 128 ] ];
-		const fac = [ 'fac_shoji', 'fac_shoji2', 'fac_shoji3' ], roofs = [ 'tile_roof', 'tile_roof2', 'tile_roof3' ];
-		for ( let x = - 80; x < 80; x += 13 ) {
-
-			for ( let z = - 50; z < 400; z += 12 ) {
-
-				const w = b.r( 8, 11 ), d = b.r( 8, 10.5 ), bx = x + b.r( 0, 12 - w ), bz = z + b.r( 0, 11 - d );
-				if ( keep.some( ( [ a0, c0, a1, c1 ] ) => bx < a1 && bx + w > a0 && bz < c1 && bz + d > c0 ) ) continue;
-				if ( bz < 218 && bz + d > 186 ) continue;
-				if ( b.rng() < 0.13 ) {
-
-					b.building( bx, bz, bx + w, bz + d, b.r( 14, 30 ), b.pick( [ 'fac_conc', 'fac_conc2', 'fac_grey' ] ), '', { roof: 'pav_light', trim: 'trim_green' } );
-					b.poster( bx + w / 2, b.r( 5, 9 ), bz - 0.03, 3, 4, Math.PI, ( b.rng() * 4 ) | 0 );
-
-				} else {
-
-					b.house( bx, bz, bx + w, bz + d, b.r( 4, 9 ), b.r( 1.6, 3 ), b.rng() < 0.5 ? 'x' : 'z', b.pick( fac ), b.pick( roofs ), { walk: false } );
-
-				}
-
-			}
-
-		}
-
+		townFill( b, [ [ - 16, - 20, 16, 345 ], [ 14, 38, 44, 128 ] ], { x0: - 80, x1: 80, z0: - 50, skip: ( bx, bz, w, d ) => bz < 218 && bz + d > 186 } );
 		for ( let z = - 20; z < 380; z += 36 ) b.lanternLine( - 16, 7, z + 10, - 30, 7.5, z + 10, { n: 5 } );
 		b.lattice( 52, 0, 150, 58, 70, 156, 'beam', 'y', 4 );
 		b.lattice( 53.5, 70, 151.5, 56.5, 84, 154.5, 'beam', 'y', 3 );
