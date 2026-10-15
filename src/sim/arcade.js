@@ -146,7 +146,7 @@ export const ARCADE_TUNING = {
 	airFriction: 0.25,
 	wallRunTime: 0.85,
 	wallRunReach: 0.8,
-	wallJumpSideSpeed: 6.5,
+	wallJumpSideSpeed: 5,
 	wallJumpUpSpeed: 9.5,
 	wallKickSpeed: 7,
 	wallKickUpSpeed: 9.5,

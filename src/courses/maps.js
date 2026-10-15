@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { CONT } from '../world/builder.js';
 import { gate, hint } from './gates.js';
 import { ROOFTOPS } from './rooftops.js';
+import { DOCKS } from './docks.js';
 
 // Background old-town fill: rows of timber houses with the odd modern poster block.
 function townFill(b, keep, { x0 = -90, x1 = 90, z0 = -60, z1 = 400, skip = null } = {}) {
@@ -25,148 +26,7 @@ function townFill(b, keep, { x0 = -90, x1 = 90, z0 = -60, z1 = 400, skip = null 
 export const MAPS = [
   ROOFTOPS,
 
-  {
-    id: 'docks',
-    name: 'Docks',
-    tagline: 'Container yard, after midnight',
-    blurb: 'Two routes. The high line is faster — if you can hold it.',
-    theme: 'night',
-    unlock: 1,
-    medals: [66, 54, 46.5, 40.5],
-    spawn: { x: 0, y: 8, z: -16, yaw: 0 },
-    killY: -0.8,
-    env: { water: { y: -1.2 }, birds: [0, 16, 90] },
-    checkpoints: [
-      gate(-2.44, 2.44, 7.8, 27),
-      gate(-16, 10, 5.2, 66, { h: 4.5, y0: 0, spawnX: 0, vis: [-2.44, 7.32] }),
-      gate(-20, 9.76, 5.2, 143.5, { h: 4.5, y0: 0, spawnX: 0, vis: [-4.88, 9.76] }),
-      gate(-7, 7, 7, 177),
-      gate(-5, 5, 1.5, 219, { h: 5 }),
-      gate(-40, 40, 5.2, 252, { y0: 0, h: 5, spawnX: 0, vis: [-4.88, 4.88] }),
-      gate(-40, 40, 0, 300, { h: 10 }),
-      gate(-4.88, 4.88, 10.4, 358, { h: 5 }),
-    ],
-    hints: [
-      hint(-22, 6, 'Two routes ahead. The <b>high line</b> is faster.'),
-      hint(184, 194, 'Off the ship — hop the pontoons'),
-      hint(256, 260, '← Wall-run the stack'),
-      hint(306, 316, 'Climb the pyramid to finish'),
-    ],
-    build(b) {
-      const w = b.w, L = CONT.L;
-      // dock slab (the sea comes from env)
-      b.box(-60, -3, -40, 60, 0, 168, { top: 'pav_light', side: 'concrete' });
-      for (let z = -30; z < 165; z += 20) { b.palm(-54, 0, z, 7 + b.r(0, 2)); b.palm(54, 0, z + 10, 7 + b.r(0, 2)); }
-      for (let x = -56; x <= 56; x += 8) { b.put(new THREE.CylinderGeometry(0.28, 0.32, 0.8, 12), 'steel', x + 3, 0.4, 166.6, 1, 1, 1); }
-      b.crates(-8, 0, 30, 4); b.crates(9, 0, 44, 3); b.crates(-12, 0, 150, 4); b.crates(12, 0, 160, 3);
-      for (let z = 92; z < 125; z += 6) b.cone(-7.2, 0, z);
-      b.stringLights(-8.44, 6.4, 94, 7.32, 6.8, 94, { color: '#ffb86a' });
-      b.stringLights(-8.44, 6.4, 118, 7.32, 6.8, 118, { color: '#ffb86a' });
-      b.bunting(-2.44, 9.5, 24.5, -2.44, 9.2, 36, { n: 12, sag: 0.6 });
-      b.awning(-1.0, 86, 2.44, 89, 1.0, 'canvas_yellow');
-      for (let x = -58; x <= 58; x += 6) b.box(x - 0.3, 0, 167.2, x + 0.3, 0.6, 167.8, 'hazard');
-      // start warehouse
-      b.building(-12, -22, 12, 6, 8, 'metal', '', { roof: 'metal' });
-      b.box(-12, 8, -22, 12, 8.3, -21.7, 'metal');
-      b.vent(-8, 8, -18); b.vent(8, 8, -12);
-      // S1..S3 container lane
-      b.stack(-2.44, 9, true, 2, 2, ['c_red', 'c_blue']);
-      b.stack(-2.44, 24, true, 2, 3, ['c_orange', 'c_teal', 'c_white']);
-      b.stack(-2.44, 40, true, 2, 2, ['c_green', 'c_grey']);
-      // W1 wall-run wall (3 high) and S5 landing
-      b.stack(-4.88, 46, true, 1, 3, ['c_blue', 'c_red', 'c_yellow'], 2);
-      b.arrow(-2.42, 6.4, 56, 5, 1.2, Math.PI / 2, '#ff2e88');
-      b.stack(-2.44, 62.2, true, 3, 2, ['c_white', 'c_orange', 'c_teal']);
-      // high line: a 2.44m-wide container row straight to C2
-      b.stack(2.44, 76, true, 1, 2, ['c_teal', 'c_grey', 'c_blue', 'c_red'], 5);
-      b.stack(4.88, 76, true, 2, 3, ['c_white', 'c_orange', 'c_grey'], 5);
-      b.light(3.66, 5.35, 136.9, '#b6ff3b', 1.2);
-      b.light(3.66, 5.35, 76.1, '#b6ff3b', 1.2);
-      // ground corridor (x -8.44..2.44): drop, climb-over, slide, weave
-      b.stack(-8.44, 76, true, 1, 2, ['c_green', 'c_orange'], 5);
-      b.box(-6, 0, 90, 2.44, 1.0, 91.2, 'wood');
-      b.box(-6, 0, 100, 2.44, 4.2, 102.44, 'wood', { shade: [0.75, 1] });
-      b.box(-6, 4.2, 100.3, 2.44, 4.22, 102.1, 'hazard', { collide: false });
-      b.box(-6, 0, 106.5, 2.44, 2.6, 108.94, 'c_red', { shade: [0.75, 1] });
-      b.duct(-6, 1.0, 114, 2.44, 1.6, 114.8);
-      b.box(-6, 0, 121, -2.5, 1.2, 122.2, 'wood'); b.box(-0.5, 0, 121, 2.44, 1.2, 122.2, 'wood');
-      b.sign(-1.8, 3.6, 114.9, 6, 1.4, 'LOW CLEARANCE', '#ffb020', Math.PI, { font: 'bold 110px Anton, Impact, sans-serif' });
-      // climb out: C1 (1 high), C2 (2 high, wide), C3 (3 high)
-      b.stack(-4.88, 128, true, 3, 1, ['c_blue', 'c_red', 'c_white']);
-      b.stack(-4.88, 140.2, true, 6, 2, ['c_orange', 'c_teal', 'c_grey']);
-      b.stack(-2.44, 152.4, true, 2, 3, ['c_red', 'c_yellow', 'c_blue']);
-      // the ship
-      b.box(-40, -1.2, 170.6, 40, 7, 194, { side: 'hull', top: 'deck' }, { surface: 'metal' });
-      b.box(-40, 0.5, 170.5, 40, 1.2, 194.1, 'hull_red', { collide: false });
-      b.building(22, 174, 36, 192, 19, 'fac_dark', '', { base: 7 });
-      b.box(26, 19, 180, 32, 22, 186, 'white');
-      b.antenna(29, 22, 183, 6);
-      b.stack(-36, 173, false, 2, 2, ['c_red', 'c_blue', 'c_white'], 2);
-      b.container(-30, 7, 186, false, 'c_orange'); b.container(-14, 7, 187, false, 'c_teal');
-      b.sign(0, 12.5, 193.9, 20, 4, 'ORIENT LINE', '#27e8ff', Math.PI);
-      // cranes
-      for (const cx of [-24, 18]) {
-        b.lattice(cx - 1.2, 0, 150, cx + 1.2, 34, 152.4, 'beam_yellow', 'y', 3);
-        b.lattice(cx - 1.2, 0, 160, cx + 1.2, 34, 162.4, 'beam_yellow', 'y', 3);
-        b.lattice(cx - 1, 34, 140, cx + 1, 36, 200, 'beam_yellow', 'z', 3);
-        b.light(cx, 36.5, 200, '#ff3030', 1.5, true);
-      }
-      // yard dressing
-      b.building(-44, 20, -16, 80, 11, 'metal', '', { roof: 'metal' });
-      b.sign(-15.9, 8, 50, 16, 4, 'DOCK 9', '#ff2e88', Math.PI / 2);
-      b.building(16, 0, 44, 60, 13, 'metal', '', { roof: 'metal' });
-      b.sign(15.9, 9, 30, 18, 4, 'NIGHT FREIGHT', '#b6ff3b', -Math.PI / 2);
-      // side warehouses seal the yard so the two routes are the only routes
-      b.building(10, 62, 44, 140, 12, 'metal', '', { roof: 'metal' });
-      b.sign(9.9, 9, 100, 18, 4, 'RUNOFF FREIGHT', '#27e8ff', -Math.PI / 2);
-      b.building(-44, 80, -8.44, 127, 10, 'metal', '', { roof: 'metal' });
-      const cols = ['c_red', 'c_blue', 'c_green', 'c_orange', 'c_white', 'c_teal', 'c_grey', 'c_yellow'];
-      for (let i = 0; i < 6; i++) b.stack(-40 + i * 4.3, 130, true, 1, 1 + (i % 3), [b.pick(cols), b.pick(cols)], 3);
-      for (let i = 0; i < 5; i++) b.stack(14 + i * 4.3, 142, true, 1, 1 + ((i * 2) % 3), [b.pick(cols), b.pick(cols)], 2);
-      for (const [x, z] of [[-10, 0], [10, 20], [-10, 40], [-10, 150], [12, 150], [8, 70]]) b.lamp(x, 0, z, 8);
-      for (const [x, z] of [[-6, 164], [6, 164]]) b.lamp(x, 0, z, 6, '#9fd8ff');
-      // pontoons to the second terminal
-      for (const [z0, z1] of [[198, 210], [213, 225]]) {
-        b.box(-5, -1.2, z0, 5, 1.5, z1, { top: 'deck', side: 'hull_red' }, { surface: 'metal' });
-        for (const x of [-4.6, 4.6]) b.put(new THREE.CylinderGeometry(0.2, 0.2, 0.6, 10), 'steel', x, 1.8, (z0 + z1) / 2, 1, 1, 1);
-      }
-      b.lamp(-5.5, 1.5, 211.5, 5, '#9fd8ff'); b.lamp(5.5, 1.5, 211.5, 5, '#9fd8ff');
-      // terminal two
-      b.box(-60, -3, 230, 60, 0, 380, { top: 'pav_light', side: 'concrete' });
-      for (let x = -58; x <= 58; x += 6) b.box(x - 0.3, 0, 230.2, x + 0.3, 0.6, 230.8, 'hazard');
-      b.stack(-4.88, 236, true, 4, 1, ['c_green', 'c_white', 'c_blue', 'c_red']);
-      b.stack(-4.88, 248.2, true, 4, 2, ['c_orange', 'c_teal']);
-      b.stack(4.88, 256, true, 1, 3, ['c_red', 'c_yellow', 'c_blue'], 2);
-      b.arrow(4.86, 6.4, 265, 5, 1.2, -Math.PI / 2, '#ff2e88');
-      b.stack(-4.88, 270.4, true, 4, 2, ['c_white', 'c_grey']);
-      // slalom on the ground
-      b.box(-6, 0, 290, 6, 1.1, 291.2, 'wood');
-      b.duct(-8, 1.0, 297, 8, 1.6, 297.8);
-      b.box(-8, 0, 303, -1, 1.25, 304.2, 'wood'); b.box(1, 0, 303, 8, 1.25, 304.2, 'wood');
-      b.dumpster(-4, 309);
-      for (let z = 286; z < 312; z += 5) { b.cone(-7, 0, z); b.cone(7, 0, z + 2.5); }
-      b.sign(0, 3.6, 297.9, 6, 1.4, 'LOW CLEARANCE', '#ffb020', Math.PI, { font: 'bold 110px Anton, Impact, sans-serif' });
-      // the pyramid
-      b.stack(-4.88, 315, true, 4, 1, ['c_blue', 'c_red', 'c_white', 'c_teal']);
-      b.stack(-4.88, 327.2, true, 4, 2, ['c_orange', 'c_green']);
-      b.stack(-4.88, 339.4, true, 4, 3, ['c_yellow', 'c_red', 'c_blue']);
-      b.stack(-4.88, 351.6, true, 4, 4, ['c_white', 'c_teal', 'c_orange', 'c_grey']);
-      b.sign(0, 13.5, 363.7, 14, 3, 'LAST STOP', '#ff2e88', Math.PI);
-      // terminal dressing
-      b.building(16, 236, 50, 330, 14, 'metal', '', { roof: 'metal' });
-      b.sign(15.9, 10, 280, 18, 4, 'TERMINAL 2', '#b6ff3b', -Math.PI / 2);
-      b.building(-50, 240, -16, 320, 12, 'metal', '', { roof: 'metal' });
-      for (const [x, z] of [[-10, 240], [10, 262], [-10, 290], [10, 320], [-10, 345]]) b.lamp(x, 0, z, 8);
-      for (const cx of [-26, 22]) {
-        b.lattice(cx - 1.2, 0, 250, cx + 1.2, 34, 252.4, 'beam_yellow', 'y', 3);
-        b.lattice(cx - 1.2, 0, 262, cx + 1.2, 34, 264.4, 'beam_yellow', 'y', 3);
-        b.lattice(cx - 1, 34, 236, cx + 1, 36, 300, 'beam_yellow', 'z', 3);
-      }
-      // far shores
-      b.backdrop({ x0: -500, x1: 500, z0: 440, z1: 640, cell: 36, hMin: 15, hMax: 90, roofDeco: false, fill: 0.7 });
-      b.backdrop({ x0: -300, x1: 300, z0: -260, z1: -60, cell: 30, hMin: 10, hMax: 40, fill: 0.6 });
-    },
-  },
+  DOCKS,
 
   {
     id: 'skeleton',
