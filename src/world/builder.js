@@ -930,7 +930,8 @@ export class Builder {
   }
 
   // ---------- traversal kit: the Trizen runner's things to take hold of ----------
-  // Each lays down its solid, the feature the runner reads (world/solids.js) and its look. Faces are a wall's outward
+  // Each lays down its solid, the feature the runner reads (world/solids.js) and its look. Thin posts and masts are
+  // tagged out of bounds as well as no-climb: the core only keeps wall runs off a solid by that tag. Faces are a wall's outward
   // normal: '+x', '-x', '+z' or '-z'. Sizes follow the core's metrics (poles and pipes 0.06 m, bars 0.03 m, ladders
   // 0.5 m wide, beams 0.15 m).
 
@@ -975,7 +976,7 @@ export class Builder {
     for (const [x, y, z] of [a, b]) {
       const mx = x + left[0] * side, mz = z + left[1] * side;
       this.segment([mx, y - mast, mz], [mx, y + 0.35, mz], 0.09, 'beam_yellow');
-      this.w.col.addPrism([mx, y - mast, mz], [mx, y + 0.35, mz], 0.09, { sides: 8, tags: ['noClimb'] });
+      this.w.col.addPrism([mx, y - mast, mz], [mx, y + 0.35, mz], 0.09, { sides: 8, tags: ['noClimb', 'outOfBounds'] });
       if (side) this.segment([mx, y + 0.25, mz], [x, y + 0.25, z], 0.04, 'beam_yellow');
       this.put(GEO.sphere, 'steel', x, y + 0.05, z, 0.1, 0.1, 0.1);
     }
@@ -1008,7 +1009,7 @@ export class Builder {
     if (!posts) return;
     for (const [x, z] of [[x0, z0], [x1, z1]]) {
       this.segment([x, base, z], [x, y + 0.15, z], 0.05, 'beam_yellow');
-      this.w.col.addPrism([x, base, z], [x, y + 0.15, z], 0.05, { sides: 8, tags: ['barPost', 'noClimb'] });
+      this.w.col.addPrism([x, base, z], [x, y + 0.15, z], 0.05, { sides: 8, tags: ['barPost', 'noClimb', 'outOfBounds'] });
     }
   }
 

@@ -78,6 +78,8 @@ export function runRoute( session, waypoints, { seconds = 120, dt = 1 / 60 } = {
 		if ( c && f.x + 0.3 > c.x0 && f.x - 0.3 < c.x1 && f.y + 1.8 > c.y0 && f.y < c.y1 && f.z + 0.3 > c.z0 && f.z - 0.3 < c.z1 ) {
 
 			log.push( `  CP${cp + 1}  ${session.time.toFixed( 2 )}s` );
+			// As the trial does: a fall comes back to the gate just passed.
+			session.setCheckpoint( cp + 1 );
 			if ( ++ cp === map.checkpoints.length ) {
 
 				finish = session.time;

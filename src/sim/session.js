@@ -179,7 +179,9 @@ export class Session {
 		} );
 		for ( const event of sim.frameEvents ) this.onEvent( event );
 
-		if ( sim.position.y - 0.9215 < this.map.killY ) {
+		// Below the course's kill height, or somewhere the course calls a fall (the ground under a tower): back to the
+		// checkpoint.
+		if ( sim.position.y - 0.9215 < this.map.killY || this.map.isDead?.( this.feet, this.checkpoint ) ) {
 
 			this.onEvent( { type: 'fell' } );
 			this.backToCheckpoint();

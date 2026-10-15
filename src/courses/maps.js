@@ -4,6 +4,7 @@ import { CONT } from '../world/builder.js';
 import { gate, hint } from './gates.js';
 import { ROOFTOPS } from './rooftops.js';
 import { DOCKS } from './docks.js';
+import { SKELETON } from './skeleton.js';
 
 // Background old-town fill: rows of timber houses with the odd modern poster block.
 function townFill(b, keep, { x0 = -90, x1 = 90, z0 = -60, z1 = 400, skip = null } = {}) {
@@ -28,142 +29,7 @@ export const MAPS = [
 
   DOCKS,
 
-  {
-    id: 'skeleton',
-    name: 'Skeleton',
-    tagline: 'Tower site, high noon',
-    blurb: 'A vertical course. Climb, wall-climb, and balance on beams.',
-    theme: 'day',
-    unlock: 3,
-    medals: [54, 44, 38.5, 34],
-    spawn: { x: 0, y: 0, z: -14, yaw: 0 },
-    killY: -5,
-    env: { birds: [0, 30, 80] },
-    isDead: (p, cp) => cp >= 1 && p.y < 1,
-    checkpoints: [
-      gate(-6, 6, 5, 24),
-      gate(-6, 6, 5, 55),
-      gate(-6, 6, 10, 80),
-      gate(-6, 6, 14.2, 116),
-      gate(-6, 6, 18.4, 155),
-      gate(-6, 6, 18.4, 180),
-      gate(-6, 6, 22.2, 216),
-      gate(-1.2, 1.2, 24.7, 250),
-      gate(-3, 3, 24.7, 279, { h: 5 }),
-    ],
-    hints: [
-      hint(-20, 2, 'Up is the only way. Climb onto the site cabin.'),
-      hint(84, 86, 'Jump <b>into</b> the wall and keep holding forward'),
-      hint(96, 99, 'Walk the beam. Don\'t look down.'),
-      hint(126, 137, '<b>Slide</b> then jump to clear the gap'),
-      hint(180, 188, '← Wall-run the core'),
-      hint(226, 238, 'Out onto the crane jib. Twenty-five metres. No net.'),
-    ],
-    build(b) {
-      const w = b.w;
-      b.box(-80, -2, -60, 80, 0, 320, { top: 'dirt', side: 'dirt' });
-      b.street(-0.02);
-      // fence
-      for (let z = -40; z < 300; z += 4) { b.box(-30, 0, z, -29.9, 2.2, z + 3.9, 'steel', { collide: false }); b.box(29.9, 0, z, 30, 2.2, z + 3.9, 'steel', { collide: false }); }
-      // start: pallets, site cabin
-      b.box(-3, 0, -3, 3, 1.0, -1.8, 'wood');
-      b.box(-4, 0, 2, 4, 2.6, 8, { side: 'c_white', top: 'metal' }, { shade: [0.7, 1] });
-      b.sign(0, 2.0, 8.01, 4, 0.8, 'SITE OFFICE', '#1b1f2a', 0, { glow: false, bg: '#f5c518' });
-      // scaffold platform + bridge
-      b.plankDeck(-4, 10, 4, 20, 5.0);
-      b.scaffold(-4, 10, 4, 20, 0, 6.5);
-      b.plankDeck(-1.2, 20, 1.2, 22, 5.0);
-      // p3 slab with low beam + crates
-      b.slab(-6, 22, 6, 40, 5.0);
-      b.ibeam(-6, 29.8, 6, 30.2, 6.6);
-      b.box(-6, 5.95, 29.8, -5.6, 6.6, 30.2, 'beam'); b.box(5.6, 5.95, 29.8, 6, 6.6, 30.2, 'beam');
-      b.box(-6, 6.15, 29.85, 6, 6.2, 30.15, 'beam', { invisible: true });
-      b.box(-6, 5, 35, 6, 6.0, 35.6, 'wood');
-      for (const s of [-1, 1]) b.box(s * 6 - (s > 0 ? 0.15 : 0), 5, 22, s * 6 + (s > 0 ? 0 : 0.15), 6.0, 40, 'hazard');
-      // p4 wall-run core
-      b.box(6, 0, 38, 9, 16, 54, 'concrete', { shade: [0.6, 1] });
-      b.arrow(5.94, 6.6, 45, 4, 1, -Math.PI / 2, '#ff5a1f');
-      // p5
-      b.slab(-6, 50, 6, 62, 5.0);
-      // p6, p7
-      b.slab(-6, 62, 6, 74, 7.5);
-      b.box(-6, 5, 62, 6, 7.15, 62.4, 'concrete');
-      b.slab(-6, 74, 6, 86, 10);
-      b.box(-6, 7.5, 74, 6, 9.65, 74.4, 'concrete');
-      // p8 wall-climb
-      b.box(-6, 10, 86, 6, 14.2, 88, 'concrete', { shade: [0.8, 1] });
-      b.slab(-6, 88, 6, 98, 14.2, 0.35, false);
-      for (const cx of [-5.8, 5.8]) b.column(cx, 97.8, 0, 13.85);
-      // p9 beams
-      b.ibeam(-0.25, 98, 0.25, 112, 14.2);
-      b.ibeam(3.25, 98, 3.75, 112, 14.2, 'beam_yellow');
-      b.ibeam(-4.25, 98, -3.75, 112, 14.2, 'beam_yellow');
-      for (const x of [-4, 0, 3.5]) b.column(x, 105, 0, 13.75, 0.18, 'steel');
-      // safety net under the beams: fall in and it throws you back up
-      b.awning(-6, 98.6, 6, 111.4, 11.0, 'canvas_green', false);
-      for (const [x, z] of [[-6, 98.6], [6, 98.6], [-6, 111.4], [6, 111.4]]) b.put(new THREE.CylinderGeometry(0.05, 0.05, 11, 6), 'steel', x, 5.5, z, 1, 1, 1);
-      // p10
-      b.slab(-6, 112, 6, 124, 14.2);
-      // p11 wall-climb up to 18.4
-      b.box(-6, 14.2, 124, 6, 18.4, 126, 'concrete', { shade: [0.8, 1] });
-      b.slab(-6, 126, 6, 137, 18.4, 0.35, false);
-      for (const cx of [-5.8, 5.8]) b.column(cx, 136.8, 0, 18.05);
-      // p12
-      b.slab(-6, 143.5, 6, 162, 18.4);
-      for (const s of [-1, 1]) b.box(s * 6 - (s > 0 ? 0.15 : 0), 18.4, 143.5, s * 6 + (s > 0 ? 0 : 0.15), 19.4, 162, 'hazard');
-      // p13 beams, p14
-      b.ibeam(-0.25, 162, 0.25, 176, 18.4);
-      b.ibeam(-3.75, 162, -3.25, 176, 18.4, 'beam_yellow');
-      for (const x of [-3.5, 0]) b.column(x, 169, 0, 17.95, 0.18, 'steel');
-      b.slab(-6, 176, 6, 188, 18.4);
-      // core wall for the wall-run, p15
-      b.box(6, 0, 186, 9, 30, 204, 'concrete', { shade: [0.6, 1] });
-      b.arrow(5.94, 19.6, 193, 4, 1, -Math.PI / 2, '#ff5a1f');
-      b.slab(-6, 198, 6, 210, 18.0);
-      // p16 wall-climb, p17 climb
-      b.box(-6, 18, 210, 6, 22.2, 212, 'concrete', { shade: [0.8, 1] });
-      b.slab(-6, 212, 6, 224, 22.2, 0.35, false);
-      for (const cx of [-5.8, 5.8]) b.column(cx, 223.8, 0, 21.85);
-      b.box(-6, 22.2, 224, 6, 24.35, 224.4, 'concrete');
-      b.slab(-6, 224, 6, 236, 24.7);
-      // the crane jib out to the cab
-      b.lattice(-1, 22.6, 239, 1, 24.3, 275, 'beam_yellow', 'z', 2);
-      b.box(-1, 24.3, 239, 1, 24.7, 275, { top: 'metal', side: 'beam_yellow' });
-      b.railing(-1.05, 239, -1.05, 275, 24.7, 1.0, { collide: false, mat: 'beam_yellow' });
-      b.lattice(8.8, 0, 256, 11.2, 24.3, 258.4, 'beam_yellow', 'y', 2.4);
-      b.box(1, 22.6, 255.5, 11.2, 24.3, 259, 'beam_yellow', { collide: false });
-      b.box(-3, 20.5, 275, 3, 24.7, 283, { side: 'c_yellow', top: 'metal' });
-      b.box(-2.5, 24.7, 279.5, 2.5, 27.2, 282.8, { side: 'glass', top: 'metal' });
-      b.sign(0, 29, 282.7, 10, 2.4, 'TOPPED OUT', '#ff5a1f', Math.PI, { glow: false, bg: '#1b1f2a' });
-      // tower crane
-      b.lattice(12, 0, 120, 14.4, 40, 122.4, 'beam_yellow', 'y', 2.4);
-      b.lattice(-30, 40, 120.2, 30, 42, 122.2, 'beam_yellow', 'x', 3);
-      b.box(11.6, 38, 118, 14.8, 41, 124.4, { side: 'beam_yellow', top: 'metal' }, { collide: false });
-      b.box(-20, 42, 120.4, -12, 44, 122, 'concrete', { collide: false });
-      // rebar + clutter
-      for (let i = 0; i < 40; i++) {
-        const z = b.r(22, 160), x = b.r(-5.5, 5.5);
-        const y = z < 40 ? 5 : z < 62 ? 5 : z < 74 ? 7.5 : z < 86 ? 10 : z < 98 ? 14.2 : z < 124 ? 14.2 : 18.4;
-        if (z > 98 && z < 112) continue;
-        if (z > 137 && z < 144) continue;
-        b.box(x - 0.02, y, z - 0.02, x + 0.02, y + b.r(0.3, 0.9), z + 0.02, 'steel', { collide: false });
-      }
-      // site dressing
-      for (const [x, z, c] of [[-14, -8, 'c_blue'], [-12.6, -8, 'c_orange'], [-11.2, -8, 'c_green']]) b.box(x - 0.6, 0, z - 0.6, x + 0.6, 2.3, z + 0.6, c, { shade: [0.8, 1] });
-      b.crates(12, 0, 4, 4); b.crates(-12, 0, 30, 3); b.crates(14, 0, 60, 4);
-      b.put(new THREE.CylinderGeometry(0.9, 0.9, 1.6, 16), 'c_orange', 16, 1.6, 20, 1, 1, 1, 0.5, 0, 0);
-      for (let z = -10; z < 20; z += 4) b.cone(-6, 0, z);
-      b.bunting(13.2, 38, 121.2, -6, 18.4, 136, { n: 20, sag: 2 });
-      for (const [x, z] of [[-22, -20], [22, -20], [-24, 40], [24, 70], [-26, 110], [26, 150], [-24, 175]]) b.tree(x, 0, z, 1.1);
-      // neighbouring finished towers + skyline
-      b.building(-40, 30, -22, 70, 46, 'fac_office', '', {});
-      b.building(22, -10, 44, 30, 34, 'fac_grey', '', {});
-      b.building(24, 150, 50, 190, 58, 'fac_office', '', {});
-      b.building(-44, 200, -22, 250, 50, 'fac_grey', '', {});
-      b.building(24, 270, 48, 310, 40, 'fac_sky', '', {});
-      b.backdrop({ x0: -400, x1: 400, z0: -300, z1: 600, cell: 45, hMin: 18, hMax: 80, fill: 0.55, avoid: [[-80, -60, 80, 320]], roofDeco: false });
-    },
-  },
+  SKELETON,
 
   {
     id: 'park',
