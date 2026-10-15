@@ -148,14 +148,14 @@ button:focus-visible, [data-nav]:focus-visible { outline: none; }
 .chip small { font: 700 11px var(--mono); color: var(--gold); }
 .chip i { width: 10px; height: 10px; display: inline-block; }
 .section-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint); }
-.runner-list { display: grid; gap: 8px; }
-.runner-card { display: flex; align-items: center; gap: 14px; padding: 12px 14px; text-align: left; border: 1px solid var(--line); background: rgba(244, 241, 234, 0.04); transition: border-color 120ms, background 120ms; }
+.runner-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.runner-card { display: flex; align-items: center; gap: 10px; padding: 9px 10px; min-width: 0; text-align: left; border: 1px solid var(--line); background: rgba(244, 241, 234, 0.04); transition: border-color 120ms, background 120ms; }
 .runner-card:hover, .runner-card:focus-visible { border-color: var(--line-2); background: rgba(244, 241, 234, 0.08); }
 .runner-card.on { border-color: var(--ember); background: var(--ember-soft); }
-.runner-card .badge { width: 40px; height: 40px; display: grid; place-items: center; font: 400 22px var(--display); background: rgba(244, 241, 234, 0.08); transform: var(--slant); }
-.runner-card .name { font: 400 24px/1 var(--display); letter-spacing: 0.03em; }
-.runner-card .note { font-size: 12px; color: var(--muted); }
-.runner-card .check { margin-left: auto; color: var(--ember); font-weight: 700; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.runner-card .badge { flex: none; width: 32px; height: 32px; display: grid; place-items: center; font: 400 18px var(--display); background: rgba(244, 241, 234, 0.08); transform: var(--slant); }
+.runner-card .name { font: 400 20px/1 var(--display); letter-spacing: 0.03em; }
+.runner-card .note { font-size: 11px; color: var(--muted); }
+.runner-card .check { margin-left: auto; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 10px var(--ember); font-size: 0; }
 .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(244, 241, 234, 0.2); position: relative; transition: transform 120ms; }
 .swatch:hover, .swatch:focus-visible { transform: scale(1.1); }

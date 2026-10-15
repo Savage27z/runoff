@@ -24,8 +24,9 @@ A character Mixamo rigged keeps the Mixamo bone names, which is all the fit need
 
 ## Microsoft Rocketbox avatars
 
-Kestrel, Dash, Striker and Winger are [Microsoft Rocketbox](https://github.com/microsoft/Microsoft-Rocketbox) avatars
-(Sports_Female_02, Sports_Male_04, Sports_Male_02, Sports_Male_03), MIT licensed: `public/characters/LICENSE-rocketbox.md`.
+Kestrel, Dash, Striker, Winger, Spark, Talon, Echo and Juno are [Microsoft Rocketbox](https://github.com/microsoft/Microsoft-Rocketbox)
+avatars (Sports_Female_02, Sports_Male_04, _02, _03; Female_Adult_12, _04, _08, _17), MIT licensed:
+`public/characters/LICENSE-rocketbox.md`.
 More of the library's 115 avatars convert the same way: download an avatar's `Export/<name>.fbx` and its `Textures/`
 (the `_color` and `_normal` maps; the specular maps are not used) keeping the two folders side by side, then:
 

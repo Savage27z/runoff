@@ -57,7 +57,8 @@ const mesh = ( geometry, material, [ x, y, z ] = [ 0, 0, 0 ], [ rx, ry, rz ] = [
 
 };
 
-// The pieces, each a Group laid out about its anchor in the model's frame (m), for a head `h` tall (bone to skull top).
+// The pieces, each a Group laid out about its anchor (the top of the skull) in the model's frame (m), for a head `h`
+// tall (its bone to the top of the skull), `r` half as wide, its eyes `e` under the top.
 const HEAD = {
 	cap( h, r ) {
 
@@ -86,21 +87,21 @@ const HEAD = {
 		return g;
 
 	},
-	headband( h, r ) {
+	headband( h, r, e ) {
 
 		const g = new THREE.Group();
-		g.add( mesh( new THREE.TorusGeometry( r * 1.04, r * 0.11, 8, 32 ), mat( '#ff2e88' ), [ 0, - h * 0.42, 0.005 ], [ Math.PI / 2 - 0.12, 0, 0 ], [ 1, 1.1, 1 ] ) );
+		g.add( mesh( new THREE.TorusGeometry( r * 1.04, r * 0.11, 8, 32 ), mat( '#ff2e88' ), [ 0, - e + h * 0.08, 0.005 ], [ Math.PI / 2 - 0.12, 0, 0 ], [ 1, 1.1, 1 ] ) );
 		return g;
 
 	},
-	headphones( h, r ) {
+	headphones( h, r, e ) {
 
 		const g = new THREE.Group(), shell = mat( '#1b1f2a', { roughness: 0.4 } ), pad = mat( '#ff5a1f' );
-		g.add( mesh( new THREE.TorusGeometry( r * 1.12, r * 0.08, 8, 24, Math.PI ), shell, [ 0, - h * 0.45, 0 ], [ 0, 0, 0 ], [ 1, 1.05, 1 ] ) );
+		g.add( mesh( new THREE.TorusGeometry( r * 1.12, r * 0.08, 8, 24, Math.PI ), shell, [ 0, - e + 0.01, 0 ], [ 0, 0, 0 ], [ 1, 1.05, 1 ] ) );
 		for ( const s of [ - 1, 1 ] ) {
 
-			g.add( mesh( new THREE.CylinderGeometry( r * 0.42, r * 0.42, r * 0.32, 18 ), shell, [ s * r * 1.12, - h * 0.48, 0 ], [ 0, 0, Math.PI / 2 ] ) );
-			g.add( mesh( new THREE.CylinderGeometry( r * 0.3, r * 0.3, r * 0.34, 18 ), pad, [ s * r * 1.14, - h * 0.48, 0 ], [ 0, 0, Math.PI / 2 ] ) );
+			g.add( mesh( new THREE.CylinderGeometry( r * 0.42, r * 0.42, r * 0.32, 18 ), shell, [ s * r * 1.12, - e - 0.01, 0 ], [ 0, 0, Math.PI / 2 ] ) );
+			g.add( mesh( new THREE.CylinderGeometry( r * 0.3, r * 0.3, r * 0.34, 18 ), pad, [ s * r * 1.14, - e - 0.01, 0 ], [ 0, 0, Math.PI / 2 ] ) );
 
 		}
 
@@ -145,25 +146,25 @@ const HEAD = {
 };
 
 const FACE = {
-	shades( h, r, f ) {
+	shades( h, r, f, e ) {
 
 		const g = new THREE.Group(), lens = mat( '#0b0d12', { roughness: 0.1, metalness: 0.8 } ), frame = mat( '#1b1f2a' );
-		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.SphereGeometry( r * 0.3, 14, 10 ), lens, [ s * r * 0.36, - h * 0.48, f ], [ 0, 0, 0 ], [ 1.15, 0.7, 0.3 ] ) );
-		g.add( mesh( new THREE.BoxGeometry( r * 0.3, r * 0.05, r * 0.05 ), frame, [ 0, - h * 0.45, f + 0.006 ] ) );
+		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.SphereGeometry( r * 0.3, 14, 10 ), lens, [ s * r * 0.36, - e, f ], [ 0, 0, 0 ], [ 1.15, 0.7, 0.3 ] ) );
+		g.add( mesh( new THREE.BoxGeometry( r * 0.3, r * 0.05, r * 0.05 ), frame, [ 0, - e + 0.006, f + 0.006 ] ) );
 		return g;
 
 	},
-	mask( h, r, f ) {
+	mask( h, r, f, e ) {
 
 		const g = new THREE.Group();
-		g.add( mesh( new THREE.CylinderGeometry( f + 0.004, f * 0.88, h * 0.32, 24, 1, true, - Math.PI * 0.62, Math.PI * 1.24 ), mat( '#9e1b24', { roughness: 0.95, side: THREE.DoubleSide } ), [ 0, - h * 0.72, 0 ] ) );
+		g.add( mesh( new THREE.CylinderGeometry( f + 0.004, f * 0.88, h * 0.32, 24, 1, true, - Math.PI * 0.62, Math.PI * 1.24 ), mat( '#9e1b24', { roughness: 0.95, side: THREE.DoubleSide } ), [ 0, - e - h * 0.24, 0 ] ) );
 		return g;
 
 	},
-	visor( h, r, f ) {
+	visor( h, r, f, e ) {
 
 		const g = new THREE.Group();
-		g.add( mesh( new THREE.CylinderGeometry( f + 0.012, f + 0.012, r * 0.32, 28, 1, true, - Math.PI * 0.42, Math.PI * 0.84 ), glowMat( '#27e8ff' ), [ 0, - h * 0.47, 0 ] ) );
+		g.add( mesh( new THREE.CylinderGeometry( f + 0.012, f + 0.012, r * 0.32, 28, 1, true, - Math.PI * 0.42, Math.PI * 0.84 ), glowMat( '#27e8ff' ), [ 0, - e + 0.002, 0 ] ) );
 		g.children[ 0 ].material.side = THREE.DoubleSide;
 		return g;
 
@@ -276,7 +277,13 @@ export class Gear {
 		const crown = most( points.filter( ( p ) => p.y > head.y && near( p, head, 0.05 ) ), ( p ) => p.y, topBone.y );
 		this.top = new THREE.Vector3( head.x, crown, head.z );
 		this.h = Math.max( 0.12, crown - head.y );
-		const ears = head.y + this.h * 0.45, eyes = crown - this.h * 0.48;
+		// The eyes: the rig's eye bones where it has them (Mixamo's LeftEye, a Biped's LEye), else about half way down.
+		const eyeBones = [];
+		model.traverse( ( o ) => o.isBone && /(LeftEye|RightEye|LEye|REye)$/.test( o.name ) && eyeBones.push( o ) );
+		const eyeRests = eyeBones.map( ( b ) => restMatrix( this.skinned, b ) ).filter( Boolean );
+		const eyes = eyeRests.length ? eyeRests.reduce( ( y, m ) => y + new THREE.Vector3().setFromMatrixPosition( m ).y, 0 ) / eyeRests.length : crown - this.h * 0.48;
+		this.e = crown - eyes;
+		const ears = eyes - this.h * 0.05;
 		// (At most half the head's height: a full head of hair is wider than the head a hat sits on.)
 		this.r = Math.min( this.h * 0.5, most( points.filter( ( p ) => Math.abs( p.y - ears ) < 0.02 && near( p, head, 0.2 ) ), ( p ) => Math.abs( p.x - head.x ), this.h * 0.5 ) );
 		this.f = most( points.filter( ( p ) => Math.abs( p.y - eyes ) < 0.02 && Math.abs( p.x - head.x ) < 0.03 && Math.abs( p.z - head.z ) < 0.2 ), ( p ) => p.z - head.z, this.r );
@@ -323,10 +330,10 @@ export class Gear {
 	set( gear ) {
 
 		this.clear();
-		const { h, r, f, k } = this;
+		const { h, r, f, k, e } = this;
 		const head = HEAD[ gear.head ], face = FACE[ gear.face ], back = BACK[ gear.back ];
-		if ( head ) this.attach( head( h, r ), this.head, this.headRest, this.top );
-		if ( face ) this.attach( face( h, r, f ), this.head, this.headRest, this.top );
+		if ( head ) this.attach( head( h, r, e ), this.head, this.headRest, this.top );
+		if ( face ) this.attach( face( h, r, f, e ), this.head, this.headRest, this.top );
 		if ( back === BACK.scarf && this.neckRest ) this.attach( back( k, this.neckBack ), this.neck, this.neckRest, this.neckAt );
 		else if ( back && this.chestRest ) this.attach( back( k ), this.chest, this.chestRest, this.back );
 		const trail = GEAR.trail.find( ( t ) => t.id === gear.trail );

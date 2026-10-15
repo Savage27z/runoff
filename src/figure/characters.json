@@ -3,7 +3,11 @@
 	{ "id": "soldier", "name": "Vanguard", "model": "characters/soldier.glb", "fit": true, "from": "Mixamo runner" },
 	{ "id": "kestrel", "name": "Kestrel", "model": "characters/kestrel.glb", "fit": true, "from": "Rocketbox runner" },
 	{ "id": "dash", "name": "Dash", "model": "characters/dash.glb", "fit": true, "from": "Rocketbox runner" },
+	{ "id": "spark", "name": "Spark", "model": "characters/spark.glb", "fit": true, "from": "Rocketbox runner" },
 	{ "id": "striker", "name": "Striker", "model": "characters/striker.glb", "fit": true, "from": "Rocketbox runner" },
+	{ "id": "talon", "name": "Talon", "model": "characters/talon.glb", "fit": true, "from": "Rocketbox runner" },
 	{ "id": "winger", "name": "Winger", "model": "characters/winger.glb", "fit": true, "from": "Rocketbox runner" },
+	{ "id": "echo", "name": "Echo", "model": "characters/echo.glb", "fit": true, "from": "Rocketbox runner" },
+	{ "id": "juno", "name": "Juno", "model": "characters/juno.glb", "fit": true, "from": "Rocketbox runner" },
 	{ "id": "ybot", "name": "Y Bot", "model": "models/ybot.glb", "fit": false, "from": "The test dummy" }
 ]
