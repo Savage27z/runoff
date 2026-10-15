@@ -1,0 +1,8 @@
+node_modules/
+dist/
+reference/
+public/data/
+public/models/
+public/sounds/
+src/data/ybot.json
+src/data/ybot-ragdoll.json

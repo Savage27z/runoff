@@ -1,0 +1,5 @@
+[
+	{ "id": "michelle", "name": "Michelle", "model": "characters/michelle.glb", "fit": true },
+	{ "id": "soldier", "name": "Vanguard", "model": "characters/soldier.glb", "fit": true },
+	{ "id": "ybot", "name": "Y Bot", "model": "models/ybot.glb", "fit": false }
+]

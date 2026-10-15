@@ -1,0 +1,23 @@
+{
+	"name": "runoff",
+	"version": "2.0.0",
+	"private": true,
+	"type": "module",
+	"description": "RUNOFF: rooftop parkour time-trials, on the Trizen parkour runner.",
+	"scripts": {
+		"postinstall": "node scripts/sync-assets.mjs",
+		"sync-assets": "node scripts/sync-assets.mjs",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@trizendigital/parkour": "0.1.0",
+		"@trizendigital/parkour-box3d": "0.1.0",
+		"three": "0.186.1"
+	},
+	"devDependencies": {
+		"@trizendigital/parkour-demo": "0.1.0",
+		"vite": "8.3.4"
+	}
+}
