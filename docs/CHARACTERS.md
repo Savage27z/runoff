@@ -21,3 +21,17 @@ sign-in, so the download is yours; the rest is one command.
 
 A character Mixamo rigged keeps the Mixamo bone names, which is all the fit needs. If one looks wrong in a pose, run
 `node tools/characters/check-fit.mjs public/characters/<id>.glb` to see which limb is off.
+
+## Microsoft Rocketbox avatars
+
+Kestrel, Dash, Striker and Winger are [Microsoft Rocketbox](https://github.com/microsoft/Microsoft-Rocketbox) avatars
+(Sports_Female_02, Sports_Male_04, Sports_Male_02, Sports_Male_03), MIT licensed: `public/characters/LICENSE-rocketbox.md`.
+More of the library's 115 avatars convert the same way: download an avatar's `Export/<name>.fbx` and its `Textures/`
+(the `_color` and `_normal` maps; the specular maps are not used) keeping the two folders side by side, then:
+
+```bash
+node tools/characters/convert.mjs <avatar>/Export/<name>.fbx <id> "<Name>"
+```
+
+The converter sees the 3ds Max Biped rig, renames its bones to Mixamo's, hangs the thighs and clavicles where Mixamo
+does, and gives the avatar a T-pose clip (its own rest is an A-pose) for the fit; they fit the Y Bot within a degree.

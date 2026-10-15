@@ -145,74 +145,77 @@ const HEAD = {
 };
 
 const FACE = {
-	shades( h, r ) {
+	shades( h, r, f ) {
 
 		const g = new THREE.Group(), lens = mat( '#0b0d12', { roughness: 0.1, metalness: 0.8 } ), frame = mat( '#1b1f2a' );
-		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.SphereGeometry( r * 0.3, 14, 10 ), lens, [ s * r * 0.36, - h * 0.48, r * 0.98 ], [ 0, 0, 0 ], [ 1.15, 0.7, 0.3 ] ) );
-		g.add( mesh( new THREE.BoxGeometry( r * 0.3, r * 0.05, r * 0.05 ), frame, [ 0, - h * 0.45, r * 1.04 ] ) );
+		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.SphereGeometry( r * 0.3, 14, 10 ), lens, [ s * r * 0.36, - h * 0.48, f ], [ 0, 0, 0 ], [ 1.15, 0.7, 0.3 ] ) );
+		g.add( mesh( new THREE.BoxGeometry( r * 0.3, r * 0.05, r * 0.05 ), frame, [ 0, - h * 0.45, f + 0.006 ] ) );
 		return g;
 
 	},
-	mask( h, r ) {
+	mask( h, r, f ) {
 
 		const g = new THREE.Group();
-		g.add( mesh( new THREE.CylinderGeometry( r * 0.98, r * 0.85, h * 0.32, 24, 1, true, - Math.PI * 0.62, Math.PI * 1.24 ), mat( '#9e1b24', { roughness: 0.95, side: THREE.DoubleSide } ), [ 0, - h * 0.72, r * 0.06 ] ) );
+		g.add( mesh( new THREE.CylinderGeometry( f + 0.004, f * 0.88, h * 0.32, 24, 1, true, - Math.PI * 0.62, Math.PI * 1.24 ), mat( '#9e1b24', { roughness: 0.95, side: THREE.DoubleSide } ), [ 0, - h * 0.72, 0 ] ) );
 		return g;
 
 	},
-	visor( h, r ) {
+	visor( h, r, f ) {
 
 		const g = new THREE.Group();
-		g.add( mesh( new THREE.CylinderGeometry( r * 1.06, r * 1.06, r * 0.32, 28, 1, true, - Math.PI * 0.42, Math.PI * 0.84 ), glowMat( '#27e8ff' ), [ 0, - h * 0.47, 0 ], [ 0, 0, 0 ], [ 1, 1, 1.02 ] ) );
+		g.add( mesh( new THREE.CylinderGeometry( f + 0.012, f + 0.012, r * 0.32, 28, 1, true, - Math.PI * 0.42, Math.PI * 0.84 ), glowMat( '#27e8ff' ), [ 0, - h * 0.47, 0 ] ) );
 		g.children[ 0 ].material.side = THREE.DoubleSide;
 		return g;
 
 	},
 };
 
-// The back pieces, about the chest bone, for a head `r` wide (the runners' builds scale with their heads).
+// The back pieces, laid out from the back's surface behind the chest bone (z 0 there, behind is -z), in metres for the
+// Y Bot's build, times `k` the runner's (broader shoulders, a bigger pack). The scarf from the neck: `neck` its joint
+// to the back of the neck (m, behind is -).
 const BACK = {
-	backpack( r ) {
+	backpack( k ) {
 
-		const g = new THREE.Group(), bag = mat( '#2f6e45', { roughness: 0.85 } ), strap = mat( '#1b1f2a' );
-		g.add( mesh( new THREE.BoxGeometry( r * 2.6, r * 3.2, r * 1.3 ), bag, [ 0, - r * 0.6, - r * 1.6 ] ) );
-		g.add( mesh( new THREE.BoxGeometry( r * 2.0, r * 1.2, r * 0.5 ), bag, [ 0, - r * 1.3, - r * 2.35 ] ) );
-		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.BoxGeometry( r * 0.3, r * 3, r * 0.15 ), strap, [ s * r * 0.85, - r * 0.4, r * 0.95 ] ) );
+		const g = new THREE.Group(), bag = mat( '#2f6e45', { roughness: 0.85 } ), dark = mat( '#1b1f2a' );
+		g.add( mesh( new THREE.BoxGeometry( 0.3 * k, 0.38 * k, 0.13 * k ), bag, [ 0, - 0.08 * k, - 0.07 * k ] ) );
+		g.add( mesh( new THREE.BoxGeometry( 0.22 * k, 0.14 * k, 0.05 * k ), bag, [ 0, - 0.17 * k, - 0.155 * k ] ) );
+		g.add( mesh( new THREE.TorusGeometry( 0.035 * k, 0.008 * k, 6, 12, Math.PI ), dark, [ 0, 0.11 * k, - 0.07 * k ] ) );
+		for ( const s of [ - 1, 1 ] ) g.add( mesh( new THREE.BoxGeometry( 0.035 * k, 0.3 * k, 0.012 * k ), dark, [ s * 0.09 * k, 0.02 * k, - 0.003 ] ) );
 		return g;
 
 	},
-	scarf( r ) {
+	scarf( k, neck ) {
 
 		const g = new THREE.Group(), wool = mat( '#ffc629', { roughness: 0.95 } );
-		g.add( mesh( new THREE.TorusGeometry( r * 0.75, r * 0.32, 10, 24 ), wool, [ 0, r * 1.9, r * 0.05 ], [ Math.PI / 2 + 0.2, 0, 0 ] ) );
-		g.add( mesh( new THREE.BoxGeometry( r * 0.7, r * 3.2, r * 0.18 ), wool, [ r * 0.4, r * 0.4, - r * 1.05 ], [ 0.22, 0, 0.12 ] ) );
+		g.add( mesh( new THREE.TorusGeometry( Math.abs( neck ) + 0.012, 0.028 * k, 10, 24 ), wool, [ 0, - 0.02 * k, 0 ], [ Math.PI / 2 + 0.2, 0, 0 ] ) );
+		g.add( mesh( new THREE.BoxGeometry( 0.07 * k, 0.32 * k, 0.018 * k ), wool, [ 0.035 * k, - 0.19 * k, neck - 0.03 * k ], [ 0.22, 0, 0.12 ] ) );
 		return g;
 
 	},
-	jetpack( r ) {
+	jetpack( k ) {
 
 		const g = new THREE.Group(), steel = mat( '#d9dde3', { metalness: 0.85, roughness: 0.3 } ), flame = glowMat( '#ff8a2b' );
 		for ( const s of [ - 1, 1 ] ) {
 
-			g.add( mesh( new THREE.CylinderGeometry( r * 0.6, r * 0.6, r * 3, 16 ), steel, [ s * r * 0.7, - r * 0.5, - r * 1.6 ] ) );
-			g.add( mesh( new THREE.ConeGeometry( r * 0.5, r * 0.6, 16 ), steel, [ s * r * 0.7, r * 1.3, - r * 1.6 ] ) );
-			g.add( mesh( new THREE.ConeGeometry( r * 0.35, r * 1.1, 12 ), flame, [ s * r * 0.7, - r * 2.6, - r * 1.6 ], [ Math.PI, 0, 0 ] ) );
+			g.add( mesh( new THREE.CylinderGeometry( 0.06 * k, 0.06 * k, 0.32 * k, 16 ), steel, [ s * 0.07 * k, - 0.06 * k, - 0.07 * k ] ) );
+			g.add( mesh( new THREE.ConeGeometry( 0.05 * k, 0.06 * k, 16 ), steel, [ s * 0.07 * k, 0.13 * k, - 0.07 * k ] ) );
+			g.add( mesh( new THREE.ConeGeometry( 0.035 * k, 0.11 * k, 12 ), flame, [ s * 0.07 * k, - 0.28 * k, - 0.07 * k ], [ Math.PI, 0, 0 ] ) );
 
 		}
 
 		return g;
 
 	},
-	wings( r ) {
+	wings( k ) {
 
 		const g = new THREE.Group(), feather = new THREE.MeshBasicMaterial( { color: '#ff5a1f', toneMapped: false, transparent: true, opacity: 0.85, side: THREE.DoubleSide } );
-		const shape = new THREE.Shape();
+		const r = 0.05 * k, shape = new THREE.Shape();
 		shape.moveTo( 0, 0 );
 		shape.bezierCurveTo( r * 2, r * 3.4, r * 7, r * 3.2, r * 9, r * 1.4 );
 		shape.bezierCurveTo( r * 6, r * 1.2, r * 4, - r * 0.6, r * 3.4, - r * 3 );
 		shape.bezierCurveTo( r * 2, - r * 1.6, r * 0.8, - r * 1, 0, 0 );
 		const geometry = new THREE.ShapeGeometry( shape, 16 );
-		for ( const s of [ - 1, 1 ] ) g.add( mesh( geometry, feather, [ s * r * 0.4, r * 0.2, - r * 1.2 ], [ 0, s * 0.45, 0 ], [ s, 1, 1 ] ) );
+		for ( const s of [ - 1, 1 ] ) g.add( mesh( geometry, feather, [ s * 0.02 * k, 0.01 * k, - 0.03 * k ], [ 0, s * 0.45, 0 ], [ s, 1, 1 ] ) );
 		return g;
 
 	},
@@ -242,15 +245,61 @@ export class Gear {
 		this.head = model.getObjectByName( figure.roles.head );
 		this.chest = model.getObjectByName( figure.roles.chest );
 		this.hips = model.getObjectByName( figure.roles.hips );
-		const top = model.getObjectByName( 'mixamorigHeadTop_End' );
-		const headRest = restMatrix( skinned, this.head ), topRest = top && restMatrix( skinned, top );
-		this.headRest = headRest;
+		this.neck = model.getObjectByName( 'mixamorigNeck' );
+		this.headRest = restMatrix( skinned, this.head );
 		this.chestRest = restMatrix( skinned, this.chest );
-		// The head's height (its bone to the top of the skull) and half its width, in the bind pose's units.
-		const at = new THREE.Vector3().setFromMatrixPosition( headRest ), tip = topRest ? new THREE.Vector3().setFromMatrixPosition( topRest ) : at.clone().add( new THREE.Vector3( 0, 0.2, 0 ) );
-		this.h = tip.distanceTo( at );
-		this.r = this.h * 0.5;
-		this.top = tip;
+		this.neckRest = this.neck && restMatrix( skinned, this.neck );
+		this.measure( model, model.getObjectByName( 'mixamorigHeadTop_End' ) );
+
+	}
+
+	// The body as it stands at its bind pose (facing +z, as every fitted runner does): the top of its skull over the
+	// head bone, the head's half width, the face's front, the back's surface behind the chest and the neck. Rigs put their
+	// joints in different places inside a body (a Mixamo spine runs near the back, a Biped spine through the middle), so
+	// the gear sits on the body's surfaces, not at offsets from its joints.
+	measure( model, top ) {
+
+		const points = [], v = new THREE.Vector3();
+		model.traverse( ( o ) => {
+
+			if ( ! o.isSkinnedMesh ) return;
+			const position = o.geometry.attributes.position;
+			for ( let i = 0; i < position.count; i ++ ) points.push( v.fromBufferAttribute( position, i ).applyMatrix4( o.bindMatrix ).clone() );
+
+		} );
+		const most = ( list, value, fallback ) => list.length ? Math.max( ...list.map( value ) ) : fallback;
+		const least = ( list, value, fallback ) => list.length ? Math.min( ...list.map( value ) ) : fallback;
+		const head = new THREE.Vector3().setFromMatrixPosition( this.headRest );
+		const near = ( p, at, radius ) => Math.hypot( p.x - at.x, p.z - at.z ) < radius;
+		const topRest = top && restMatrix( this.skinned, top );
+		const topBone = topRest ? new THREE.Vector3().setFromMatrixPosition( topRest ) : head.clone().add( new THREE.Vector3( 0, 0.2, 0 ) );
+		const crown = most( points.filter( ( p ) => p.y > head.y && near( p, head, 0.05 ) ), ( p ) => p.y, topBone.y );
+		this.top = new THREE.Vector3( head.x, crown, head.z );
+		this.h = Math.max( 0.12, crown - head.y );
+		const ears = head.y + this.h * 0.45, eyes = crown - this.h * 0.48;
+		// (At most half the head's height: a full head of hair is wider than the head a hat sits on.)
+		this.r = Math.min( this.h * 0.5, most( points.filter( ( p ) => Math.abs( p.y - ears ) < 0.02 && near( p, head, 0.2 ) ), ( p ) => Math.abs( p.x - head.x ), this.h * 0.5 ) );
+		this.f = most( points.filter( ( p ) => Math.abs( p.y - eyes ) < 0.02 && Math.abs( p.x - head.x ) < 0.03 && Math.abs( p.z - head.z ) < 0.2 ), ( p ) => p.z - head.z, this.r );
+		const chest = new THREE.Vector3().setFromMatrixPosition( this.chestRest );
+		const back = least( points.filter( ( p ) => Math.abs( p.y - chest.y ) < 0.05 && Math.abs( p.x - chest.x ) < 0.08 && p.z < chest.z + 0.05 ), ( p ) => p.z, chest.z - 0.1 );
+		this.back = new THREE.Vector3( chest.x, chest.y, back );
+		if ( this.neckRest ) {
+
+			this.neckAt = new THREE.Vector3().setFromMatrixPosition( this.neckRest );
+			const neck = this.neckAt;
+			this.neckBack = least( points.filter( ( p ) => Math.abs( p.y - neck.y ) < 0.02 && Math.abs( p.x - neck.x ) < 0.04 && Math.abs( p.z - neck.z ) < 0.15 ), ( p ) => p.z - neck.z, - 0.06 );
+
+		}
+
+		// A runner's build against the Y Bot's: its shoulders (the joints of its upper arms) against the Y Bot's 0.375 m.
+		const arm = ( side ) => {
+
+			const bone = model.getObjectByName( `mixamorig${side}Arm` ), rest = bone && restMatrix( this.skinned, bone );
+			return rest ? new THREE.Vector3().setFromMatrixPosition( rest ) : null;
+
+		};
+		const left = arm( 'Left' ), right = arm( 'Right' );
+		this.k = left && right ? THREE.MathUtils.clamp( left.distanceTo( right ) / 0.375, 0.85, 1.2 ) : 1;
 
 	}
 
@@ -274,11 +323,12 @@ export class Gear {
 	set( gear ) {
 
 		this.clear();
-		const { h, r } = this;
+		const { h, r, f, k } = this;
 		const head = HEAD[ gear.head ], face = FACE[ gear.face ], back = BACK[ gear.back ];
 		if ( head ) this.attach( head( h, r ), this.head, this.headRest, this.top );
-		if ( face ) this.attach( face( h, r ), this.head, this.headRest, this.top );
-		if ( back && this.chestRest ) this.attach( back( r * 0.5 ), this.chest, this.chestRest, new THREE.Vector3().setFromMatrixPosition( this.chestRest ) );
+		if ( face ) this.attach( face( h, r, f ), this.head, this.headRest, this.top );
+		if ( back === BACK.scarf && this.neckRest ) this.attach( back( k, this.neckBack ), this.neck, this.neckRest, this.neckAt );
+		else if ( back && this.chestRest ) this.attach( back( k ), this.chest, this.chestRest, this.back );
 		const trail = GEAR.trail.find( ( t ) => t.id === gear.trail );
 		if ( trail?.id ) this.trail = new Trail( trail.color, this.scene );
 

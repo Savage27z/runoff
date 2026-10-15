@@ -365,7 +365,7 @@ export class UI {
 		const list = s.querySelector( '.runner-list' );
 		list.innerHTML = game.characters.map( ( c ) => `<button class="runner-card ${c.id === game.character.id ? 'on' : ''}" data-nav data-runner="${c.id}">
 			<span class="badge">${c.name[ 0 ]}</span>
-			<span><span class="name">${c.name}</span><br><span class="note">${c.fit ? 'Mixamo runner' : 'The test dummy'}</span></span>
+			<span><span class="name">${c.name}</span><br><span class="note">${c.from ?? ( c.fit ? 'Mixamo runner' : 'The test dummy' )}</span></span>
 			${c.id === game.character.id ? '<span class="check">Running</span>' : ''}
 		</button>` ).join( '' );
 		for ( const card of list.querySelectorAll( '[data-runner]' ) ) {
