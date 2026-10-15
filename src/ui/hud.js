@@ -24,6 +24,7 @@ export class Hud {
 				<div class="hud-time"><div class="clock">0.000</div><div class="split"></div></div>
 				<div class="hud-right"><div class="cps">0<small>/0</small></div><div class="target"></div></div>
 				<div class="hud-speed"><div class="value">0.0<small>M/S</small></div><div class="bar"><i></i></div></div>
+				<div class="hud-style"><div class="combo"></div><ol class="feed"></ol><div class="total"></div></div>
 				<div class="hud-hint"></div>
 				<div class="hud-prompt"></div>
 				<div class="hud-fps"></div>
@@ -33,6 +34,7 @@ export class Hud {
 		this.el = {
 			clock: $( '.clock' ), split: $( '.split' ), cps: $( '.cps' ), target: $( '.target' ), speed: $( '.hud-speed .value' ),
 			bar: $( '.hud-speed .bar i' ), hint: $( '.hud-hint' ), prompt: $( '.hud-prompt' ), fps: $( '.hud-fps' ),
+			combo: $( '.hud-style .combo' ), feed: $( '.hud-style .feed' ), total: $( '.hud-style .total' ),
 		};
 		this.splitLeft = 0;
 		this.lastHint = null;
@@ -46,6 +48,8 @@ export class Hud {
 		this.el.split.classList.remove( 'show' );
 		this.el.cps.innerHTML = `0<small>/${map.checkpoints.length}</small>`;
 		this.lastHint = undefined;
+		this.lastFeed = '';
+		this.el.combo.textContent = this.el.feed.innerHTML = this.el.total.textContent = '';
 
 	}
 
@@ -65,13 +69,32 @@ export class Hud {
 
 	}
 
+	// The style: the last moves (newest on top, fading), the combo running (points × multiplier), the total banked.
+	style( style ) {
+
+		const el = this.el;
+		const feed = style.feed.map( ( m ) => `<li class="${m.big ? 'big' : ''} ${m.fresh ? '' : 'repeat'}" style="opacity:${Math.max( 0, 1 - m.t / 2.4 ).toFixed( 2 )}">${m.name}<b>+${m.pts}</b></li>` ).join( '' );
+		if ( feed !== this.lastFeed ) {
+
+			this.lastFeed = feed;
+			el.feed.innerHTML = feed;
+
+		}
+
+		const combo = style.combo;
+		el.combo.innerHTML = combo ? `${combo.pts.toLocaleString()}<small>×${style.mult}</small>` : '';
+		el.combo.classList.toggle( 'live', Boolean( combo ) );
+		el.total.textContent = style.total ? `Style ${style.total.toLocaleString()}` : '';
+
+	}
+
 	fps( text ) {
 
 		this.el.fps.textContent = text;
 
 	}
 
-	frame( { trial, session, dt, hints = true } ) {
+	frame( { trial, session, style, dt, hints = true } ) {
 
 		const el = this.el;
 		el.clock.textContent = fmtTime( trial.t );
@@ -96,6 +119,8 @@ export class Hud {
 		el.speed.innerHTML = `${speed.toFixed( 1 )}<small>M/S</small>`;
 		el.bar.style.width = `${Math.min( 100, speed / ( pace * 1.6 ) * 100 )}%`;
 		el.bar.classList.toggle( 'over', speed > pace + 0.2 );
+
+		if ( style ) this.style( style );
 
 		const hint = hints ? trial.hintAt( session.feet ) : null;
 		if ( hint !== this.lastHint ) {

@@ -10,6 +10,7 @@ const { buildCourse } = await import( '../src/courses/build.js' );
 const { Session } = await import( '../src/sim/session.js' );
 const { runRoute, ROUTES } = await import( '../src/dev/bot.js' );
 const { Figure } = await import( '@trizendigital/parkour' );
+const { Style } = await import( '../src/game/style.js' );
 
 const [ only, onlyRoute, limitArg = '2' ] = process.argv.slice( 2 );
 const limit = Number( limitArg );
@@ -41,10 +42,30 @@ for ( const [ id, routes ] of Object.entries( ROUTES ) ) {
 			}
 
 		};
+		// The style score as the game keeps it: the run's events (the bot's own handler still told), every frame.
+		const style = new Style();
+		let told = null;
+		Object.defineProperty( session, 'onEvent', { configurable: true, get: () => ( event ) => {
+
+			style.event( event, session.runner );
+			told?.( event );
+
+		}, set: ( fn ) => told = fn } );
+		const frame = session.frame.bind( session );
+		session.frame = ( dt, options ) => {
+
+			frame( dt, options );
+			style.update( dt, session.runner );
+
+		};
 		const result = runRoute( session, waypoints );
+		session.frame = frame;
+		delete session.onEvent;
+		session.onEvent = () => {};
+		const score = style.finish();
 		session.afterStep = step;
 		const time = result.finish ?? 0;
-		console.log( `${id}/${name}: ${result.finish != null ? `${time.toFixed( 1 )}s` : 'FAIL'}, ${moves} moves (one every ${( time / Math.max( moves, 1 ) ).toFixed( 1 )}s); plain runs over ${limit}s: ${stretches.length}` );
+		console.log( `${id}/${name}: ${result.finish != null ? `${time.toFixed( 1 )}s` : 'FAIL'}, ${moves} moves (one every ${( time / Math.max( moves, 1 ) ).toFixed( 1 )}s), style ${score.total} (best combo ${score.bestCombo}); plain runs over ${limit}s: ${stretches.length}` );
 		for ( const s of stretches ) console.log( `    ${s}` );
 
 	}

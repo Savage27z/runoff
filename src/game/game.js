@@ -12,6 +12,7 @@ import { Session } from '../sim/session.js';
 import { RunnerFigure } from '../figure/runnerFigure.js';
 import { CHARACTERS, characterById } from '../figure/characters.js';
 import { Trial, medalFor } from './trial.js';
+import { Style } from './style.js';
 import { Save } from './save.js';
 import { Sound } from '../audio/sound.js';
 
@@ -81,6 +82,12 @@ export class Game {
 		this.env = null;
 		this.session = null;
 		this.trial = null;
+		this.style = new Style();
+		this.style.onBank = ( bank ) => {
+
+			if ( ! bank.lost && bank.value >= 300 ) this.sound.combo();
+
+		};
 		this.elapsed = 0;
 
 		for ( const type of [ 'pointerdown', 'keydown' ] ) addEventListener( type, () => this.sound.unlock(), { capture: true } );
@@ -227,6 +234,7 @@ export class Game {
 		this.session.respawn( 0 );
 		this.trial.best = this.save.course( this.map.id ).best != null ? this.save.course( this.map.id ) : null;
 		this.trial.start();
+		this.style.reset();
 		this.mode = 'play';
 		this.ui?.show( 'hud' );
 		this.ui?.hud.reset( this.map );
@@ -258,7 +266,9 @@ export class Game {
 
 	finish( result ) {
 
+		result.style = this.style.finish();
 		const record = this.save.course( this.map.id ), before = this.stars;
+		record.style = Math.max( record.style ?? 0, result.style.total );
 		const pb = record.best == null || result.time < record.best;
 		record.runs ++;
 		if ( pb ) {
@@ -293,6 +303,8 @@ export class Game {
 		if ( event.type === 'fell' || event.type === 'backToCheckpoint' ) this.trial.respawned();
 		if ( event.type === 'restart' ) this.start();
 		if ( event.type === 'bounce' ) this.sound.bounce();
+		// The style score counts once the clock runs.
+		if ( this.trial.started ) this.style.event( event, this.session.runner );
 
 	}
 
@@ -380,6 +392,7 @@ export class Game {
 
 			if ( session.sim.paused ) this.pause();
 			this.trial.update( dt, this.elapsed );
+			if ( this.trial.started && ! this.trial.done ) this.style.update( dt, session.runner );
 			this.sound.frame( session );
 
 		} else this.trial?.update( 0, this.elapsed );

@@ -228,4 +228,12 @@ export class Sound {
 
 	}
 
+	/** A style combo banked: a quick rising pair. */
+	combo() {
+
+		this.tone( 988, 0.08, 0.1, 'triangle' );
+		this.tone( 1319, 0.12, 0.1, 'triangle', 1319, 0.06 );
+
+	}
+
 }

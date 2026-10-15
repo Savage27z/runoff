@@ -225,6 +225,20 @@ button:focus-visible, [data-nav]:focus-visible { outline: none; }
 .hud-right .target { font: 700 13px var(--mono); color: var(--muted); }
 .hud-right .target b { color: var(--text); }
 .hud-speed { position: absolute; left: 28px; bottom: 26px; display: grid; gap: 6px; width: 200px; }
+.hud-style { position: absolute; left: 28px; top: 28%; display: grid; gap: 4px; justify-items: start; text-shadow: 0 2px 12px rgba(13, 11, 22, 0.7); }
+.hud-style .combo { font: 400 40px/1 var(--display); letter-spacing: 0.03em; color: var(--ember); transform: var(--slant); transform-origin: left bottom; opacity: 0; transition: opacity 200ms; }
+.hud-style .combo.live { opacity: 1; }
+.hud-style .combo small { font: 700 20px var(--mono); color: var(--gold); margin-left: 8px; }
+.hud-style .feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.hud-style .feed li { font: 700 14px var(--body); letter-spacing: 0.06em; text-transform: uppercase; }
+.hud-style .feed li b { font: 700 13px var(--mono); color: var(--lime); margin-left: 8px; }
+.hud-style .feed li.big { font-size: 17px; color: var(--gold); }
+.hud-style .feed li.repeat { color: var(--muted); }
+.hud-style .total { font: 700 13px var(--mono); color: var(--muted); }
+.results .style-score, .card .style-score { display: flex; align-items: baseline; gap: 10px; justify-content: center; margin: 4px 0 10px; }
+.card .style-score span { font: 700 12px var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.card .style-score b { font: 400 30px/1 var(--display); color: var(--ember); letter-spacing: 0.03em; }
+.card .style-score small { font: 700 12px var(--mono); color: var(--muted); }
 .hud-speed .value { font: 400 54px/0.9 var(--display); letter-spacing: 0.02em; transform: var(--slant); transform-origin: left bottom; text-shadow: 0 3px 16px rgba(13, 11, 22, 0.6); }
 .hud-speed .value small { font: 700 13px var(--mono); color: var(--muted); margin-left: 6px; }
 .hud-speed .bar { height: 5px; background: rgba(244, 241, 234, 0.15); transform: var(--slant); }
@@ -249,6 +263,9 @@ button:focus-visible, [data-nav]:focus-visible { outline: none; }
 	.keys-hint { display: none; }
 	.locker-panel { left: 4vw; right: 4vw; width: auto; top: auto; height: 46vh; }
 	.drag-hint { display: none; }
+	.hud-style { top: 20%; left: 16px; }
+	.hud-style .combo { font-size: 30px; }
+	.hud-style .feed li { font-size: 12px; }
 	.hud-hint { bottom: 15vh; white-space: normal; width: max-content; max-width: calc(100vw - 32px); text-align: center; font-size: 14px; }
 	.help { grid-template-columns: 1fr; }
 	.row-set { grid-template-columns: 1fr; gap: 10px; }

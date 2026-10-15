@@ -305,7 +305,7 @@ export class UI {
 
 	frame( dt ) {
 
-		if ( this.current === 'hud' && this.game.trial ) this.hud.frame( { trial: this.game.trial, session: this.game.session, dt, hints: this.game.save.data.settings.hints } );
+		if ( this.current === 'hud' && this.game.trial ) this.hud.frame( { trial: this.game.trial, session: this.game.session, style: this.game.style, dt, hints: this.game.save.data.settings.hints } );
 
 	}
 
@@ -504,6 +504,7 @@ export class UI {
 			<div class="medal" style="color:${medal ? medal.color : 'var(--muted)'}">${medal ? medal.name : 'No medal'}</div>
 			<div class="time">${fmtTime( result.time )}</div>
 			<div class="sub ${pb ? 'pb' : ''}">${pb ? 'New personal best' : `Best ${fmtTime( record.best )}`}${result.respawns ? ` · ${result.respawns} respawn${result.respawns > 1 ? 's' : ''}` : ''}</div>
+			${result.style ? `<div class="style-score"><span>Style</span><b>${result.style.total.toLocaleString()}</b><small>best combo ${result.style.bestCombo.toLocaleString()}${record.style > result.style.total ? ` · record ${record.style.toLocaleString()}` : result.style.total > 0 ? ' · record' : ''}</small></div>` : ''}
 			<div class="ladder">${map.medals.map( ( t, i ) => `<b style="color:${MEDALS[ i ].color}">${MEDALS[ i ].name}</b>` ).join( '' )}${map.medals.map( ( t ) => `<span>${fmtTime( t )}</span>` ).join( '' )}</div>
 			${stars.after > stars.before ? `<div class="unlock">★ +${stars.after - stars.before} · ${stars.after} stars${opened.length ? ` · ${opened.map( ( m ) => m.name ).join( ', ' )} unlocked` : ''}</div>` : ''}
 			<div class="actions row">
