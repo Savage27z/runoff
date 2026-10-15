@@ -325,15 +325,40 @@ ROUTES.yard = {
 };
 
 ROUTES.depot = {
+  // The lane, the box stairs, the wall-run onto the island, the lane on the floor, up M's wall, the slide-jump, the
+  // block hops and the catch onto the tower.
   main: [
-    { x: 0, z: 58 },
-    { x: 0, z: 90 },
-    { x: 0, z: 128 },
-    { x: 0, z: 150, jumpAt: (p) => p.z > 138.4 && p.z < 139 },
-    { x: 0, z: 176, jumpAt: (p) => p.z > 176.3 && p.z < 177 },
-    { x: 0, z: 212, jumpAt: (p) => p.z > 176.3 && p.z < 177, slideAt: (p) => p.z > 192.2 && p.z < 192.8, slideHeld: (p) => p.z < 195.5 },
-    { x: 0, z: 230, slideAt: (p) => p.z > 210.3 && p.z < 211, slideHeld: (p) => p.z < 213.5, jumpAt: (p) => p.z > 213.5 && p.z < 213.95 },
-    { x: 0, z: 279, jumpAt: (p) => [231.4, 238.4, 245.4, 252.4, 259.4, 266.4].some((e) => p.z > e && p.z < e + 0.6) },
+    { x: 4.5, z: 2 },
+    { x: 4.5, z: 70.5, r: 1 },
+    { x: 6, z: 80, jumpAt: (p) => p.z > 72.6 && p.z < 73.4, wallJump: 0.55, r: 2.5 },
+    { x: 3, z: 102, jumpAt: (p) => p.z > 90.8 && p.z < 91.4 },
+    { x: 4, z: 111 },
+    { x: 6.4, z: 118 },
+    { x: 6.4, z: 146 },
+    { x: 6.2, z: 160, jumpAt: (p) => p.z > 151.7 && p.z < 152.5 },
+    { x: 6.2, z: 170 },
+    { x: 3, z: 177, r: 1.5 },
+    { x: 3, z: 196, slideAt: (p) => p.z > 182 && p.z < 182.7, slideHeld: (p) => p.z < 185.5, jumpAt: (p) => p.z > 186.4 && p.z < 186.9 },
+    { x: 0, z: 208, r: 2.5, jumpAt: (p) => p.z > 202.3 && p.z < 202.9 },
+    { x: 0, z: 214.5, r: 2.5, jumpAt: (p) => p.z > 208.3 && p.z < 209.4 },
+    { x: 0, z: 221, r: 2.5, jumpAt: (p) => p.z > 214.8 && p.z < 215.9 },
+    { x: 0, z: 227.5, r: 2.5, jumpAt: (p) => p.z > 221.3 && p.z < 222.4 },
+    { x: 0, z: 240, jumpAt: (p) => p.z > 228.4 && p.z < 228.95 },
+  ],
+  // The vaults and the slide bar down the middle, up P1's wall, the truss bridge, the floor's middle, M's ladder, the
+  // balance beam, the long beam and the tower's ladder.
+  safe: [
+    { x: 0, z: 54, slideAt: (p) => p.z > 20.4 && p.z < 21.1, slideHeld: (p) => p.z < 23.5 },
+    { x: 0, z: 66, jumpAt: (p) => p.z > 58.7 && p.z < 59.5 },
+    { x: 0, z: 72, r: 1 },
+    { x: 0, z: 100 },
+    { x: 0, z: 146, slideAt: (p) => p.z > 127.4 && p.z < 128.1, slideHeld: (p) => p.z < 130.5 },
+    { x: 4, z: 152.7, r: 0.5 },
+    { x: 0, z: 166 },
+    { x: -4, z: 172, r: 0.8 },
+    { x: -4, z: 179, r: 0.3 },
+    { x: -4, z: 232.2, r: 0.5 },
+    { x: 0, z: 240 },
   ],
 };
 
