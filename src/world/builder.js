@@ -647,17 +647,28 @@ export class Builder {
     const [rx, ry, rz] = P3(cA, Bc, y + rise + 0.12);
     this.put(GEO.cyl, 'timber', rx, ry, rz, 0.16, L, 0.16, alongX ? 0 : Math.PI / 2, 0, alongX ? Math.PI / 2 : 0);
     // Walkable collision: each side of the roof in slices whose tops follow the curve's chords (true slopes; RUNOFF
-    // stepped it in 0.28 m boxes). The tiles sit 0.1 m over the profile, so the slices do too.
+    // stepped it in 0.28 m boxes), the top slices of both sides one solid peaked over the ridge. The tiles sit 0.1 m
+    // over the profile, so the slices do too. (Two slices meeting at the ridge would stand their upright faces back to
+    // back there, and where solids meet at one point the runner's scans take the face most against them: running up
+    // the roof, the upright face at the ridge's edge, as a wall to vault.)
     if (walk) {
-      const S = 6;
+      const S = 6, base = y - 0.3;
+      const h = (d) => y + prof(d) + 0.08;
       for (const sd of [-1, 1]) {
         const edge = sd < 0 ? B0 : B1;
-        for (let k = 0; k < S; k++) {
+        for (let k = 0; k < S - 1; k++) {
           const da = (D * k) / S, db = (D * (k + 1)) / S;
-          const ba = edge - sd * da, bb = edge - sd * db, ha = y + prof(da) + 0.08, hb = y + prof(db) + 0.08;
-          this.w.col.addSlopedSlab([P3(A0, ba, ha), P3(A1, ba, ha), P3(A1, bb, hb), P3(A0, bb, hb)], y - 0.3, 'concrete');
+          const ba = edge - sd * da, bb = edge - sd * db, ha = h(da), hb = h(db);
+          this.w.col.addSlopedSlab([P3(A0, ba, ha), P3(A1, ba, ha), P3(A1, bb, hb), P3(A0, bb, hb)], base, 'concrete');
         }
       }
+      const dp = (D * (S - 1)) / S;
+      const profile = [[B0 + dp, base], [B1 - dp, base], [B1 - dp, h(dp)], [Bc, h(D)], [B0 + dp, h(dp)]];
+      const n = profile.length, points = [];
+      for (const a of [A0, A1]) for (const [bq, hq] of profile) points.push(P3(a, bq, hq));
+      const polygons = [[...Array(n).keys()], [...Array(n).keys()].map((i) => n + i)];
+      for (let i = 0; i < n; i++) polygons.push([i, (i + 1) % n, n + (i + 1) % n, n + i]);
+      this.w.col.addHull(points, polygons, 'concrete');
     }
   }
 

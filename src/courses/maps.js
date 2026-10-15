@@ -6,6 +6,7 @@ import { ROOFTOPS } from './rooftops.js';
 import { DOCKS } from './docks.js';
 import { SKELETON } from './skeleton.js';
 import { PARK } from './park.js';
+import { OLDTOWN } from './oldtown.js';
 
 // Background old-town fill: rows of timber houses with the odd modern poster block.
 function townFill(b, keep, { x0 = -90, x1 = 90, z0 = -60, z1 = 400, skip = null } = {}) {
@@ -34,145 +35,7 @@ export const MAPS = [
 
   PARK,
 
-  {
-    id: 'oldtown',
-    name: 'Old Town',
-    tagline: 'Lantern quarter in the haze',
-    blurb: 'A long run over tiled roofs, a canal bridge, a market and the temple.',
-    theme: 'haze',
-    unlock: 7,
-    medals: [60, 49, 42, 37],
-    spawn: { x: 0, y: 12, z: -6, yaw: 0 },
-    killY: -0.8,
-    isDead: (p) => p.y < 1,
-    env: { water: { y: -1.2 }, birds: [0, 30, 160], hills: { radius: 650, count: 18, height: [140, 320] }, clouds: 18 },
-    checkpoints: [
-      gate(-7, 7, 12.6, 22, { y0: 9.5, h: 4 }),
-      gate(-15, 15, 2, 52, { h: 12 }),
-      gate(-8, 8, 8, 116),
-      gate(-6, 6, 10.4, 147, { y0: 7.5, h: 4 }),
-      gate(-5, 5, 3, 200),
-      gate(-12, 12, 3, 232),
-      gate(-6, 6, 10.5, 264),
-      gate(-12, 12, 3, 322, { h: 6 }),
-    ],
-    hints: [
-      hint(-12, 12, 'Old Town — roofs are ramps: run up and over the ridges'),
-      hint(44, 50, 'Big drop — flip it or roll it'),
-      hint(155, 163, '← Wall-run the tall block to cross the lanes'),
-      hint(236, 249, 'Climb the scaffold tower'),
-    ],
-    build(b) {
-      // streets (with the canal cut out) — falling into the street means a respawn
-      b.box(-90, -3, -60, 90, 0, 186, { top: 'pav_warm', side: 'stone' });
-      b.box(-90, -3, 218, 90, 0, 420, { top: 'pav_warm', side: 'stone' });
-      for (const z of [186, 218]) b.box(-90, -3, z - 1, 90, 0.6, z + 1, { top: 'stone', side: 'stone' }, { collide: false });
-
-      // S0 — modern block with posters + scaffolding
-      b.building(-6, -12, 6, 12, 12, 'fac_conc2', '', { roof: 'pav_light', trim: 'trim_green' });
-      b.poster(6.03, 8, -4, 3, 4.2, Math.PI / 2, 0); b.poster(-6.03, 7, 2, 3, 4.2, -Math.PI / 2, 1); b.poster(0, 9, -12.03, 4, 5, Math.PI, 2);
-      b.scaffold(-8.4, -10, -6, 10, 0, 13.5);
-      b.put(new THREE.CylinderGeometry(1.3, 1.3, 2.6, 18), 'metal', -3.4, 13.9, -8.5, 1, 1, 1);
-      b.w.col.add(-4.7, 12, -9.8, -2.1, 15.2, -7.2, 'metal');
-      b.meshRail(-5.9, -12, -5.9, 12, 12); b.meshRail(5.9, -12, 5.9, 12, 12);
-
-      // S1, S2 — timber houses, run up and over
-      b.house(-7, 15, 7, 29, 10, 2.6, 'x', 'fac_shoji', 'tile_roof');
-      b.house(-6, 32, 6, 44, 8.5, 2.4, 'x', 'fac_shoji2', 'tile_roof');
-      b.lanternLine(-7, 11.5, 30.5, 6, 11, 30.5, { n: 6 });
-
-      // S3 — clay courtyard behind stone walls, boulders, stone lanterns
-      b.box(-15, 0, 48, 15, 2, 77, { top: 'clay', side: 'stone' });
-      b.rock(-6, 2, 58, 1.3); b.rock(5.5, 2, 63, 1.0); b.rock(0.5, 2, 67, 0.75); b.rock(-9, 2, 71, 1.1);
-      for (const [x, z] of [[-13, 50], [13, 50], [-13, 75], [9, 75]]) b.stoneLantern(x, 2, z);
-      b.tree(-12.5, 2, 62, 1.1); b.tree(11.5, 2, 70, 0.9);
-      // main hall on the right: stone base, timber body, tiered roofs
-      b.box(15, 0, 40, 42, 6, 126, { side: 'stone', top: 'pav_warm' });
-      b.house(17, 44, 40, 122, 16, 4, 'z', 'fac_shoji3', 'tile_roof', { base: 6 });
-      b.house(22, 60, 35, 106, 24, 3.5, 'z', 'fac_shoji', 'tile_roof', { base: 20, walk: false });
-      for (let z = 50; z < 120; z += 8) b.lantern(15.9, 14.2, z, 'lantern_red', 1.2);
-
-      // S4 — stone stairs up to the terrace
-      b.stairs(-4, 4, 77, 2, 10, { rise: 0.3, run: 0.3, dir: 1, rails: false });
-      b.box(-15, 0, 77, -4.35, 5, 80, { side: 'stone', top: 'pav_warm' }); b.box(4.35, 0, 77, 15, 5, 80, { side: 'stone', top: 'pav_warm' });
-      b.box(-15, 0, 80, 15, 5, 96, { top: 'pav_warm', side: 'stone' });
-      for (const x of [-12, 9]) { b.lantern(x, 7.8, 88, 'lantern_warm', 1); b.put(new THREE.CylinderGeometry(0.06, 0.06, 2.6, 6), 'timber', x, 6.3, 88, 1, 1, 1); }
-      b.house(-15, 84, -8.5, 94, 8, 1.8, 'z', 'fac_shoji2', 'tile_roof3');
-      b.house(8.5, 84, 15, 94, 8, 1.8, 'z', 'fac_shoji', 'tile_roof3');
-
-      // S5 — H3, S6 — shrine platform
-      b.house(-7, 96, 5, 107, 7.5, 2.2, 'x', 'fac_shoji3', 'tile_roof2');
-      b.box(-8, 0, 110, 8, 8, 126, { top: 'pav_light', side: 'stone' });
-      b.torii(0, 8, 118, 6, 4.2);
-      b.stoneLantern(-6.5, 8, 113); b.stoneLantern(6.5, 8, 113);
-
-      // S7 — lantern lane: roof roller-coaster, then the wall-run
-      b.house(-6, 129, 6, 139, 7, 2, 'x', 'fac_shoji', 'tile_roof');
-      b.house(-6, 142, 6, 152, 8, 2.4, 'x', 'fac_shoji2', 'tile_roof3');
-      b.house(-6, 155, 4, 163, 6.5, 2, 'x', 'fac_shoji3', 'tile_roof');
-      b.building(4.5, 156, 10, 186, 16, 'fac_conc', '', { roof: 'pav_light', trim: 'trim_green' });
-      b.poster(4.47, 9, 168, 3, 4, -Math.PI / 2, 3); b.poster(4.47, 9, 176, 3, 4, -Math.PI / 2, 1);
-      b.arrow(4.45, 8.6, 168.5, 4.5, 1.1, -Math.PI / 2, '#ffb020');
-      b.house(-6, 173, 4, 185, 6.3, 2, 'x', 'fac_shoji', 'tile_roof2');
-      b.lanternLine(-6, 10.5, 140.5, 6, 10.5, 140.5, { n: 6 });
-      b.lanternLine(-6, 10, 153.5, 4.4, 10, 153.5, { n: 5 });
-      b.lanternLine(-6, 9.5, 169, 4.4, 9.8, 169, { n: 5, sag: 1.2 });
-
-      // S8 — stone bridge over the canal
-      b.box(-5, 0.6, 186, 5, 3, 218, { top: 'pav_light', side: 'stone', bottom: 'stone' }, { keepBottom: true });
-      b.box(-5, -2, 197, 5, 0.6, 207, 'stone', { collide: false });
-      b.box(-5.3, 3, 186, -5, 4, 218, 'stone'); b.box(5, 3, 186, 5.3, 4, 218, 'stone');
-      for (const z of [190, 202, 214]) { b.stoneLantern(-4.3, 3, z); }
-
-      // S9 — market street with stalls and bouncy canopies
-      b.box(-12, 0, 218, 12, 3, 252, { top: 'pav_warm', side: 'stone' });
-      for (let z = 222; z < 246; z += 7) {
-        b.house(-12, z, -8, z + 5, 5.4, 1.2, 'z', 'fac_shoji2', 'tile_roof3', { base: 3, walk: false });
-        b.house(8, z, 12, z + 5, 5.4, 1.2, 'z', 'fac_shoji', 'tile_roof', { base: 3, walk: false });
-        b.awning(-8, z + 0.5, -6, z + 4.5, 4.4, z % 2 ? 'canvas_red' : 'canvas_blue');
-        b.awning(6, z + 0.5, 8, z + 4.5, 4.4, z % 2 ? 'canvas_green' : 'canvas_yellow');
-      }
-      b.crates(-3.5, 3, 238, 3); b.crates(3, 3, 226, 2);
-      b.lanternLine(-8, 7.5, 229, 8, 7.5, 229, { n: 6 }); b.lanternLine(-8, 7.5, 243, 8, 7.5, 243, { n: 6 });
-
-      // S10 — scaffold tower up to the poster block
-      b.plankDeck(-4, 249, 4, 252, 5.5);
-      b.plankDeck(-4, 252, 4, 255, 8.0);
-      b.scaffold(-4, 249, 4, 255, 3, 9.5);
-      b.building(-6, 255, 6, 277, 10.5, 'fac_conc2', '', { roof: 'pav_light', trim: 'trim_green' });
-      b.poster(6.03, 6, 262, 3, 4.2, Math.PI / 2, 2); b.poster(-6.03, 6, 270, 3, 4.2, -Math.PI / 2, 0);
-      b.ac(4, 10.5, 270); b.vent(-4.4, 10.5, 259);
-
-      // S11 — the temple roof, then the finish plaza
-      b.house(-9, 280, 9, 300, 9, 3.5, 'x', 'fac_shoji3', 'tile_roof2');
-      b.box(-14, 0, 304, 14, 3, 342, { top: 'pav_light', side: 'stone' });
-      b.torii(0, 3, 322, 11, 7);
-      for (const z of [310, 330]) { b.stoneLantern(-10, 3, z); b.stoneLantern(10, 3, z); }
-      b.tree(-11, 3, 338, 1.2); b.tree(11, 3, 338, 1.2);
-
-      // the rest of the town: rows of houses, a few modern blocks with posters, a lattice tower
-      const keep = [[-16, -20, 16, 345], [14, 38, 44, 128]];
-      const fac = ['fac_shoji', 'fac_shoji2', 'fac_shoji3'], roofs = ['tile_roof', 'tile_roof2', 'tile_roof3'];
-      for (let x = -80; x < 80; x += 13) {
-        for (let z = -50; z < 400; z += 12) {
-          const w = b.r(8, 11), d = b.r(8, 10.5), bx = x + b.r(0, 12 - w), bz = z + b.r(0, 11 - d);
-          if (keep.some(([a0, c0, a1, c1]) => bx < a1 && bx + w > a0 && bz < c1 && bz + d > c0)) continue;
-          if (bz < 218 && bz + d > 186) continue;
-          if (b.rng() < 0.13) {
-            b.building(bx, bz, bx + w, bz + d, b.r(14, 30), b.pick(['fac_conc', 'fac_conc2', 'fac_grey']), '', { roof: 'pav_light', trim: 'trim_green' });
-            b.poster(bx + w / 2, b.r(5, 9), bz - 0.03, 3, 4, Math.PI, (b.rng() * 4) | 0);
-          } else {
-            b.house(bx, bz, bx + w, bz + d, b.r(4, 9), b.r(1.6, 3), b.rng() < 0.5 ? 'x' : 'z', b.pick(fac), b.pick(roofs), { walk: false });
-          }
-        }
-      }
-      for (let z = -20; z < 380; z += 36) b.lanternLine(-16, 7, z + 10, -30, 7.5, z + 10, { n: 5 });
-      b.lattice(52, 0, 150, 58, 70, 156, 'beam', 'y', 4);
-      b.lattice(53.5, 70, 151.5, 56.5, 84, 154.5, 'beam', 'y', 3);
-      b.light(55, 85, 153, '#ff3030', 2.2, true);
-      b.backdrop({ x0: -400, x1: 400, z0: 430, z1: 700, cell: 40, hMin: 30, hMax: 110, fill: 0.55, roofDeco: false, facades: ['fac_conc', 'fac_conc2', 'fac_grey', 'fac_office'] });
-    },
-  },
+  OLDTOWN,
 
   {
     id: 'yard',

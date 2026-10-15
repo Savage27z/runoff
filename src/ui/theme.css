@@ -249,6 +249,7 @@ button:focus-visible, [data-nav]:focus-visible { outline: none; }
 	.keys-hint { display: none; }
 	.locker-panel { left: 4vw; right: 4vw; width: auto; top: auto; height: 46vh; }
 	.drag-hint { display: none; }
+	.hud-hint { bottom: 15vh; white-space: normal; width: max-content; max-width: calc(100vw - 32px); text-align: center; font-size: 14px; }
 	.help { grid-template-columns: 1fr; }
 	.row-set { grid-template-columns: 1fr; gap: 10px; }
 	.toggle, .segments { justify-self: start; }

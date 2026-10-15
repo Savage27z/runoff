@@ -76,3 +76,8 @@ A rise of +2 m or more is not landed on: it is a climb (below).
   0.4) reads as stairs and keeps the runner running. Steps met as boxes, or a slope's top level with the front edge of
   the floor beyond, read to the vault scan as a ledge, and the runner vaults the last few steps: stairs going up end on
   a landing (`land`), and the floor beyond starts inside it.
+- Where solids meet at one point the runner's scans take the face most against them. A convex edge at the top of a
+  slope (a roof's ridge, the top of stairs) must be one solid's edge, never two solids' upright faces back to back, or
+  the runner vaults it (`gableRoof()` makes each ridge one peaked solid).
+- A landing right on the join between two roof slices loses some speed for a moment (the next slice's edge); landing
+  mid-slice keeps it.
