@@ -1,5 +1,5 @@
-// The player's progress and preferences, kept in the browser (localStorage): the settings, the runner they chose and
-// its tint, each course's best run (time, splits, medal) and the course last played. Stars are earned per course, one
+// The player's progress and preferences, kept in the browser (localStorage): the settings, the runner they chose, its
+// tint and gear, each course's best run (time, splits, medal) and the course last played. Stars are earned per course, one
 // per medal tier reached (Bronze 1 … Ace 4), and unlock courses.
 
 const KEY = 'runoff2.save';
@@ -24,7 +24,9 @@ export const DEFAULT_SETTINGS = Object.freeze( {
 	showFps: false,
 } );
 
-const blank = () => ( { settings: { ...DEFAULT_SETTINGS }, character: null, tint: null, courses: {}, lastCourse: 'rooftops' } );
+import { DEFAULT_GEAR } from '../figure/gear.js';
+
+const blank = () => ( { settings: { ...DEFAULT_SETTINGS }, character: null, tint: null, gear: { ...DEFAULT_GEAR }, courses: {}, lastCourse: 'rooftops' } );
 
 export const Save = {
 
@@ -35,7 +37,7 @@ export const Save = {
 		try {
 
 			const stored = JSON.parse( localStorage.getItem( KEY ) || 'null' );
-			if ( stored ) this.data = { ...blank(), ...stored, settings: { ...DEFAULT_SETTINGS, ...stored.settings } };
+			if ( stored ) this.data = { ...blank(), ...stored, settings: { ...DEFAULT_SETTINGS, ...stored.settings }, gear: { ...DEFAULT_GEAR, ...stored.gear } };
 
 		} catch {
 
@@ -73,8 +75,8 @@ export const Save = {
 
 	reset() {
 
-		const settings = this.data.settings, character = this.data.character, tint = this.data.tint;
-		this.data = { ...blank(), settings, character, tint };
+		const settings = this.data.settings, character = this.data.character, tint = this.data.tint, gear = this.data.gear;
+		this.data = { ...blank(), settings, character, tint, gear };
 		this.persist();
 
 	},

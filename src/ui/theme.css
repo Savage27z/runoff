@@ -139,6 +139,14 @@ button:focus-visible, [data-nav]:focus-visible { outline: none; }
 /* ---------- Locker ---------- */
 
 .locker-panel { position: absolute; right: 4vw; top: 120px; bottom: 6vh; width: min(440px, 42vw); display: flex; flex-direction: column; gap: 16px; padding: 20px; background: var(--panel); border: 1px solid var(--line); overflow-y: auto; }
+.locker-panel .gear { display: grid; gap: 10px; }
+.locker-panel .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font: 700 12px var(--body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); background: rgba(244, 241, 234, 0.06); border: 1px solid var(--line); transform: var(--slant); cursor: pointer; }
+.chip:hover, .chip:focus-visible { border-color: var(--ember); }
+.chip.on { background: var(--ember); border-color: var(--ember); color: #160c08; }
+.chip.locked { opacity: 0.45; cursor: not-allowed; }
+.chip small { font: 700 11px var(--mono); color: var(--gold); }
+.chip i { width: 10px; height: 10px; display: inline-block; }
 .section-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint); }
 .runner-list { display: grid; gap: 8px; }
 .runner-card { display: flex; align-items: center; gap: 14px; padding: 12px 14px; text-align: left; border: 1px solid var(--line); background: rgba(244, 241, 234, 0.04); transition: border-color 120ms, background 120ms; }

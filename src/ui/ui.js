@@ -5,6 +5,7 @@
 import { THEMES } from '../world/world.js';
 import { MEDALS } from '../game/trial.js';
 import { TINTS, courseOpen } from '../game/game.js';
+import { GEAR } from '../figure/gear.js';
 import { DEFAULT_SETTINGS } from '../game/save.js';
 import { fmtTime } from '../util.js';
 import { Hud } from './hud.js';
@@ -139,6 +140,7 @@ export class UI {
 					<div class="runner-list"></div>
 					<span class="section-label">Colour</span>
 					<div class="swatches"></div>
+					<div class="gear"></div>
 				</div>
 				<div class="drag-hint">drag to turn</div>
 			</section>` ) );
@@ -389,6 +391,27 @@ export class UI {
 			sw.addEventListener( 'click', () => {
 
 				game.setTint( TINTS[ sw.dataset.tint ].id );
+				this.fillLocker();
+
+			} );
+
+		}
+
+		// The gear, slot by slot: what is worn lit, what needs more stars locked.
+		const SLOTS = { head: 'Head', face: 'Face', back: 'Back', trail: 'Trail' };
+		const worn = game.save.data.gear, box = s.querySelector( '.gear' );
+		box.innerHTML = Object.entries( SLOTS ).map( ( [ slot, label ] ) => `<span class="section-label">${label}</span><div class="chips">${GEAR[ slot ].map( ( g ) => {
+
+			const locked = stars < g.stars, on = ( worn[ slot ] ?? null ) === g.id;
+			const dot = g.color ? `<i style="background:${g.color === 'rainbow' ? 'linear-gradient(90deg,#ff2e88,#ffd24a,#c6ff3d,#27e8ff,#9b6bff)' : g.color}"></i>` : '';
+			return `<button class="chip ${on ? 'on' : ''} ${locked ? 'locked' : ''}" data-nav data-slot="${slot}" data-gear="${g.id ?? ''}" ${locked ? 'disabled' : ''}>${dot}${g.name}${locked ? ` <small>★ ${g.stars}</small>` : ''}</button>`;
+
+		} ).join( '' )}</div>` ).join( '' );
+		for ( const chip of box.querySelectorAll( '[data-slot]' ) ) {
+
+			chip.addEventListener( 'click', () => {
+
+				game.setGear( chip.dataset.slot, chip.dataset.gear || null );
 				this.fillLocker();
 
 			} );

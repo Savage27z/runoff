@@ -10,6 +10,7 @@ import { buildCourse } from '../courses/build.js';
 import { setupEnvironment } from '../world/environment.js';
 import { Session } from '../sim/session.js';
 import { RunnerFigure } from '../figure/runnerFigure.js';
+import { GEAR, Gear } from '../figure/gear.js';
 import { CHARACTERS, characterById } from '../figure/characters.js';
 import { Trial, medalFor } from './trial.js';
 import { Style } from './style.js';
@@ -148,6 +149,8 @@ export class Game {
 		const session = await new Session( { map: this.map, course: this.course, camera: this.playCamera, canvas: this.stage.renderer.domElement, figure } ).load( progress );
 		this.session = session;
 		this.stage.scene.add( figure.root );
+		this.gear = new Gear( figure, this.stage.scene );
+		this.applyGear();
 		this.applyTint();
 		this.applySettings();
 		session.onEvent = ( event ) => this.onRunEvent( event );
@@ -196,6 +199,8 @@ export class Game {
 		if ( ! this.session ) return;
 		this.ghost?.dispose();
 		this.ghost = null;
+		this.gear?.dispose();
+		this.gear = null;
 		this.trial?.dispose();
 		this.session.dispose();
 		this.session.sim.figure.root.removeFromParent();
@@ -360,6 +365,35 @@ export class Game {
 
 	}
 
+	/** Puts on a piece of gear (null for none in that slot), if its stars are earned. */
+	setGear( slot, id ) {
+
+		const piece = GEAR[ slot ]?.find( ( g ) => g.id === id );
+		if ( ! piece || piece.stars > this.stars ) return;
+		this.save.data.gear[ slot ] = id;
+		this.save.persist();
+		this.applyGear();
+		// The ghost wears the runner's gear: dressed again.
+		this.loadGhost();
+
+	}
+
+	// The gear chosen, as far as the stars earned allow.
+	applyGear() {
+
+		const chosen = this.save.data.gear, worn = {};
+		for ( const slot of Object.keys( GEAR ) ) {
+
+			const piece = GEAR[ slot ].find( ( g ) => g.id === chosen[ slot ] );
+			worn[ slot ] = piece && piece.stars <= this.stars ? piece.id : null;
+
+		}
+
+		this.gear?.set( worn );
+		this.applyTint();
+
+	}
+
 	setTint( id ) {
 
 		this.save.data.tint = id;
@@ -374,7 +408,8 @@ export class Game {
 		const tint = this.save.data.tint;
 		this.session?.sim.figure.root.traverse( ( o ) => {
 
-			if ( ! o.isMesh ) return;
+			// (The gear keeps its own colours.)
+			if ( ! o.isMesh || o.userData.gear ) return;
 			for ( const m of [ o.material ].flat() ) {
 
 				m.userData.color ??= m.color.clone();
@@ -450,6 +485,7 @@ export class Game {
 		}
 
 		updateVision( this.save.data.settings.vision, rawDt );
+		this.gear?.update( dt );
 		this.course.world.update( this.elapsed, dt );
 		this.env.update( this.elapsed );
 		this.env.center( session.sim.position.x, session.sim.position.z );
