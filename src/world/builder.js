@@ -415,15 +415,21 @@ export class Builder {
   }
 
   // Straight stair run along z. From (y0 at z0) rising by `rise` per step toward dir (+1/-1 in z).
-  // Each step is a solid box down to `base` so it reads as poured concrete. Cheek walls + dark handrails.
-  stairs(x0, x1, z0, y0, steps, { rise = 0.3, run = 0.42, dir = 1, base = null, cheeks = true, rails = true, top = 'pav_light' } = {}) {
+  // Each step is drawn as a box down to `base` so it reads as poured concrete; the runner treads one smooth slope from
+  // the bottom step's foot to the top step's back edge (steps it meets as boxes it sees as a ledge to vault near the
+  // top). `land` carries the slope's solid on flat past the top: a floor met there should start inside it (a floor's
+  // front edge level with the top of the slope reads to the runner's vault scan as a wall, and it vaults the last
+  // steps). Cheek walls + dark handrails.
+  stairs(x0, x1, z0, y0, steps, { rise = 0.3, run = 0.42, dir = 1, base = null, cheeks = true, rails = true, top = 'pav_light', land = 0 } = {}) {
     const b = base ?? Math.min(y0, y0 + rise * steps * 0) ;
     for (let i = 0; i < steps; i++) {
       const za = z0 + dir * i * run, zb = za + dir * run;
       const y = y0 + (i + 1) * rise;
-      this.w.box(x0, b, Math.min(za, zb), x1, y, Math.max(za, zb), { side: 'conc', top }, { shade: [0.6, 1] });
+      this.w.box(x0, b, Math.min(za, zb), x1, y, Math.max(za, zb), { side: 'conc', top }, { shade: [0.6, 1], collide: false });
     }
     const zEnd = z0 + dir * steps * run, yEnd = y0 + steps * rise;
+    const foot = Math.min(b, y0 - 0.05), zLand = zEnd + dir * land;
+    this.w.col.addProfileZ(x0, x1, [[z0, foot], [zLand, foot], [zLand, yEnd], ...(land ? [[zEnd, yEnd]] : []), [z0, y0]]);
     if (cheeks) {
       for (const [cx0, cx1] of [[x0 - 0.35, x0], [x1, x1 + 0.35]]) {
         // stepped collision so the cheek follows the slope, one visual slab
@@ -760,8 +766,9 @@ export class Builder {
       this.w.geo(g, 'conc', new THREE.Matrix4());
     }
     this.w.box(x0, y1 - 0.01, Math.min(z1, z1 - 0.07 * Math.sign(z1 - z0)), x1, y1 + 0.03, Math.max(z1, z1 - 0.07 * Math.sign(z1 - z0)), 'trim_yellow', { collide: false });
-    // A true slope: one wedge (RUNOFF stepped it in 0.28 m boxes).
-    this.w.col.addRampZ(x0, x1, z0, z1, y0 + 0.02, y1 + 0.02, Math.min(bse, Math.min(y0, y1) - 0.05), 'concrete');
+    // A true slope: one wedge (RUNOFF stepped it in 0.28 m boxes), its ends flush with the floors it joins (the drawn
+    // surface's 2 cm lift as a lip there stops a runner dead).
+    this.w.col.addRampZ(x0, x1, z0, z1, y0, y1, Math.min(bse, Math.min(y0, y1) - 0.05), 'concrete');
   }
 
   // Concrete balance beam on posts (top at y) across a gap, running along z.

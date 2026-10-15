@@ -108,6 +108,20 @@ export class SolidCollector {
 	}
 
 	/**
+	 * A prism across x0..x1 whose side is the convex `profile` ([ z, y ] corners in order round it).
+	 */
+	addProfileZ( x0, x1, profile, surface = 'concrete' ) {
+
+		const lo = Math.min( x0, x1 ), hi = Math.max( x0, x1 ), n = profile.length;
+		const points = [ ...profile.map( ( [ z, y ] ) => [ lo, y, z ] ), ...profile.map( ( [ z, y ] ) => [ hi, y, z ] ) ];
+		const ring = ( offset ) => Array.from( { length: n }, ( _, i ) => offset + i );
+		const polygons = [ ring( 0 ), ring( n ) ];
+		for ( let i = 0; i < n; i ++ ) polygons.push( [ i, ( i + 1 ) % n, n + ( i + 1 ) % n, n + i ] );
+		return this.addHull( points, polygons, surface );
+
+	}
+
+	/**
 	 * A slab under a sloped strip: the four top corners given ([ a0, a1, b1, b0 ] round the strip, each [ x, y, z ]),
 	 * down to `base`. Used for each slice of a curved roof.
 	 */

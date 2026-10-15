@@ -293,7 +293,8 @@ export class World {
 
   clear() {
     this.group.traverse((o) => {
-      if (o.geometry) o.geometry.dispose();
+      // (Every sprite shares one geometry of three's own: disposing it breaks the next course's sprites.)
+      if (o.geometry && !o.isSprite) o.geometry.dispose();
     });
     this.scene.remove(this.group);
     this.group = new THREE.Group();

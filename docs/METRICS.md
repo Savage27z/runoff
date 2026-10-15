@@ -67,3 +67,12 @@ A rise of +2 m or more is not landed on: it is a climb (below).
   a ladder, down is free.
 - Every climb up a storey or more gets a fast way down later (a pole, a zipline, a chute, a drop to a roll).
 - A fork offers a fast hard line and a safe one; both rejoin at the next checkpoint.
+
+## Floors that meet
+
+- Floors that meet must be flush: a lip of even 3 mm where the runner crosses from one solid onto another (a roof onto
+  a ramp) stops it dead.
+- Stairs are drawn as steps but trodden as one slope (`stairs()` in the builder); about 20° going up (rise 0.15, run
+  0.4) reads as stairs and keeps the runner running. Steps met as boxes, or a slope's top level with the front edge of
+  the floor beyond, read to the vault scan as a ledge, and the runner vaults the last few steps: stairs going up end on
+  a landing (`land`), and the floor beyond starts inside it.
